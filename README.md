@@ -1,1 +1,1 @@
-# UML-class-diagram-for-Eclipe
+# UML-class-diagram-for-Eclipse
