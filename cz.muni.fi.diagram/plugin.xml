@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            id="cz.muni.fi.diagram.commands.category"
+            name="Sample Category">
+      </category>
+      <command
+            categoryId="cz.muni.fi.diagram.commands.category"
+            name="Sample Command"
+            id="cz.muni.fi.diagram.commands.sampleCommand">
+      </command>
+      <command
+            categoryId="cz.muni.fi.diagram.commands.category"
+            id="cz.muni.fi.diagram.commands.getInfo"
+            name="GetInfo">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="cz.muni.fi.diagram.handlers.SampleHandler"
+            commandId="cz.muni.fi.diagram.commands.sampleCommand">
+      </handler>
+      <handler
+            class="cz.muni.fi.diagram.handlers.GetInfo"
+            commandId="cz.muni.fi.diagram.commands.getInfo">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="cz.muni.fi.diagram.commands.sampleCommand"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            contextId="org.eclipse.ui.contexts.window"
+            sequence="M1+6">
+      </key>
+      <key
+            commandId="cz.muni.fi.diagram.commands.getInfo"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            contextId="org.eclipse.ui.contexts.window"
+            sequence="M1+6">
+      </key>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="menu:org.eclipse.ui.main.menu?after=additions">
+         <menu
+               id="cz.muni.fi.diagram.menus.sampleMenu"
+               label="Sample Menu"
+               mnemonic="M">
+            <command
+                  commandId="cz.muni.fi.diagram.commands.sampleCommand"
+                  id="cz.muni.fi.diagram.menus.sampleCommand"
+                  mnemonic="S">
+            </command>
+            <command
+                  commandId="cz.muni.fi.diagram.commands.getInfo"
+                  id="cz.muni.fi.diagram.menus.getInfo"
+                  mnemonic="I">
+            </command>
+         </menu>
+      </menuContribution>
+      <menuContribution
+            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+         <toolbar
+               id="cz.muni.fi.diagram.toolbars.sampleToolbar">
+            <command
+                  id="cz.muni.fi.diagram.toolbars.sampleCommand"
+                  commandId="cz.muni.fi.diagram.commands.sampleCommand"
+                  icon="icons/sample.png"
+                  tooltip="Say hello world">
+            </command>
+            <command
+                  id="cz.muni.fi.diagram.toolbars.getInfo"
+                  commandId="cz.muni.fi.diagram.commands.getInfo"
+                  icon="icons/sample.png"
+                  tooltip="Give info">
+            </command>
+         </toolbar>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            category="cz.muni.fi.diagram.view"
+            class="cz.muni.fi.diagram.view.ClassDiagramView"
+            icon="icons/sample.png"
+            id="cz.muni.fi.diagram.view.ClassDiagramView"
+            name="ClassDiagram"
+            restorable="true">
+      </view>
+   </extension>
+
+</plugin>

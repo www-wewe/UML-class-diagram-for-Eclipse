@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: ClassDiagram
+Bundle-SymbolicName: cz.muni.fi.diagram;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: cz.muni.fi.diagram
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Require-Bundle: org.eclipse.fx.ui.workbench3,
+ org.eclipse.jdt.core,
+ org.eclipse.core.resources,
+ org.eclipse.ui,
+ net.sourceforge.plantuml.lib
+Export-Package: cz.muni.fi.diagram.imagecontrol,
+ cz.muni.fi.diagram.imagecontrol.jface,
+ cz.muni.fi.diagram.imagecontrol.jface.actions
