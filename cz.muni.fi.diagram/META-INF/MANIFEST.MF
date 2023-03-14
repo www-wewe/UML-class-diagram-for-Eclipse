@@ -9,7 +9,8 @@ Require-Bundle: org.eclipse.fx.ui.workbench3,
  org.eclipse.jdt.core,
  org.eclipse.core.resources,
  org.eclipse.ui,
- net.sourceforge.plantuml.lib
+ net.sourceforge.plantuml.lib,
+ org.eclipse.draw2d;bundle-version="3.10.100"
 Export-Package: cz.muni.fi.diagram.imagecontrol,
  cz.muni.fi.diagram.imagecontrol.jface,
  cz.muni.fi.diagram.imagecontrol.jface.actions

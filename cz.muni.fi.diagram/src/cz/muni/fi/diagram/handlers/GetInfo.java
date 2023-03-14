@@ -16,14 +16,20 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
-import org.eclipse.jdt.core.dom.MethodDeclaration;
 
-import cz.muni.fi.diagram.visitors.MethodVisitor;
+import cz.muni.fi.diagram.model.ClassModel;
+import cz.muni.fi.diagram.view.ClassDiagram;
+import cz.muni.fi.diagram.view.ClassObject;
+import cz.muni.fi.diagram.visitors.ClassVisitor;
 
+/**
+ * Used only for debugging
+ */
 public class GetInfo extends AbstractHandler {
 
 	private static final String JDT_NATURE = "org.eclipse.jdt.core.javanature";
-
+	private ClassDiagram classDiagram = new ClassDiagram();
+	
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
@@ -37,7 +43,7 @@ public class GetInfo extends AbstractHandler {
 			try {
 				if (project.isNatureEnabled(JDT_NATURE)) {
 					System.out.print("Working in project " + project.getName());
-					analyseMethods(project);
+					analyseClasses(project);
 				}
 			} catch (CoreException e) {
 				e.printStackTrace();
@@ -46,28 +52,28 @@ public class GetInfo extends AbstractHandler {
 		return null;
 	}
 
-	private static void analyseMethods(IProject project) throws JavaModelException {
+	private void analyseClasses(IProject project) throws JavaModelException {
 		IPackageFragment[] packages = JavaCore.create(project).getPackageFragments();
-		// parse(JavaCore.create(project));
 		for (IPackageFragment mypackage : packages) {
 			if (mypackage.getKind() == IPackageFragmentRoot.K_SOURCE) {
 				createAST(mypackage);
 			}
-
 		}
 	}
 
-	private static void createAST(IPackageFragment mypackage) throws JavaModelException {
+	private void createAST(IPackageFragment mypackage) throws JavaModelException {
 		for (ICompilationUnit unit : mypackage.getCompilationUnits()) {
 			// now create the AST for the ICompilationUnits
 			CompilationUnit parse = parse(unit);
-			MethodVisitor visitor = new MethodVisitor();
+			ClassVisitor visitor = new ClassVisitor();
 			parse.accept(visitor);
 
-			for (MethodDeclaration method : visitor.getMethods()) {
-				System.out.print("Method name: " + method.getName() + " Return type: " + method.getReturnType2() + "\n");
-			}
-
+			ClassModel classModel = visitor.getClassModel();
+			System.out.print("TU SOOOOOOOOOOM");
+			System.out.print(classModel);
+			
+			ClassObject classObject = new ClassObject(classModel, 50, 100, 250, 250);
+			classDiagram.addClass(classObject);
 		}
 	}
 
@@ -76,7 +82,7 @@ public class GetInfo extends AbstractHandler {
 	 * @param unit
 	 * @return
 	 */
-	private static CompilationUnit parse(ICompilationUnit unit) {
+	private CompilationUnit parse(ICompilationUnit unit) {
 		ASTParser parser = ASTParser.newParser(AST.getJLSLatest());
 		parser.setKind(ASTParser.K_COMPILATION_UNIT);
 		parser.setSource(unit);
