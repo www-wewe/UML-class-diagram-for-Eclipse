@@ -1,3 +1,4 @@
+/** Copyright (c) 2023, Veronika Lenková */
 package cz.muni.fi.diagram.actions;
 
 import org.eclipse.core.resources.IProject;

@@ -1,3 +1,4 @@
+/** Copyright (c) 2023, Veronika Lenková */
 package cz.muni.fi.diagram.visitors;
 
 import org.eclipse.jdt.core.ICompilationUnit;

@@ -1,3 +1,4 @@
+/** Copyright (c) 2023, Veronika Lenková */
 package cz.muni.fi.diagram.actions;
 
 import org.eclipse.jface.action.Action;
@@ -19,6 +20,7 @@ public class EraseDiagramAction extends Action {
 	@Override
     public void run() {
 		canvas.getClassDiagram().clear();
+		canvas.redraw();
     }
 
 }
