@@ -7,6 +7,11 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.jface.dialogs.MessageDialog;
 
+/**
+ * DELETE
+ * @author nxf92568
+ *
+ */
 public class SampleHandler extends AbstractHandler {
 
 	@Override

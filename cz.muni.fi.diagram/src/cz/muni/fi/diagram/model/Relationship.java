@@ -1,30 +1,32 @@
-package cz.muni.fi.diagram.view;
+package cz.muni.fi.diagram.model;
 
+// TODO delete
 public class Relationship {
-    private ClassObject fromClass;
-    private ClassObject toClass;
+    private ClassModel fromClass;
+    private ClassModel toClass;
     private RelationshipType type;
     
-    public enum RelationshipType { // nebudem potrebovať
+    public enum RelationshipType {
         INHERITANCE, REALIZATION, DEPENDENCY, ASSOCIATION, AGGREGATION, COMPOSITION;
     }
 
-    public Relationship(ClassObject fromClass, ClassObject toClass, RelationshipType type) {
+    public Relationship(ClassModel fromClass, ClassModel toClass, RelationshipType type) {
         this.fromClass = fromClass;
         this.toClass = toClass;
         this.type = type;
     }
 
-    public ClassObject getFromClass() {
+    public ClassModel getFromClass() {
         return fromClass;
     }
 
-    public ClassObject getToClass() {
+    public ClassModel getToClass() {
         return toClass;
     }
 
     public RelationshipType getType() {
         return type;
     }
+    
 }
 

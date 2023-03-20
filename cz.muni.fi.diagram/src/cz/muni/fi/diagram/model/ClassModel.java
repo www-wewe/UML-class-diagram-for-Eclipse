@@ -3,23 +3,24 @@ package cz.muni.fi.diagram.model;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Model of one class in class diagram.
+ * 
+ * @author Veronika Lenkova
+ */
 public class ClassModel {
-    private String name;
+	ClassType type;
+	private String name;
 	private String packageName;
 	private String superClassName;
     private List<FieldModel> fields;
     private List<MethodModel> methods;
     private List<String> subclasses;
     private List<String> interfaces;
-    private boolean isAbstract;
-    private boolean isInterface;
-    private boolean isEnum;
-    private boolean isAnnotation;
-    // ... other properties and methods
-
 
     public ClassModel() {
     	this.name = null;
+    	this.type = null;
     	this.fields = new ArrayList<>();
         this.methods = new ArrayList<>();
         this.superClassName = null;
@@ -27,11 +28,17 @@ public class ClassModel {
         this.interfaces = new ArrayList<>();
 	}
 
+	public void setType(ClassType type) {
+		this.type = type;
+	}
+
+    public ClassType getType() {
+		return type;
+	}
+
 	public String getName() {
         return name;
     }
-
-    // ... other methods for adding and getting properties
 
 	public void setName(String name) {
 		this.name = name;
@@ -101,48 +108,12 @@ public class ClassModel {
 		this.packageName = packageName;
 	}
 
-	public boolean isAbstract() {
-		return isAbstract;
-	}
-
-	public void setAbstract(boolean isAbstract) {
-		this.isAbstract = isAbstract;
-	}
-
-	public boolean isInterface() {
-		return isInterface;
-	}
-
-	public void setInterface(boolean isInterface) {
-		this.isInterface = isInterface;
-	}
-
-	public boolean isEnum() {
-		return isEnum;
-	}
-
-	public void setEnum(boolean isEnum) {
-		this.isEnum = isEnum;
-	}
-
-	public boolean isAnnotation() {
-		return isAnnotation;
-	}
-
-	public void setAnnotation(boolean isAnnotation) {
-		this.isAnnotation = isAnnotation;
-	}
-
 	@Override
 	public String toString() {
-		return "ClassModel [getName()=" + getName() + ", getFields()=" + getFields() + ", getSuperClassName()="
-				+ getSuperClassName() + ", getMethods()=" + getMethods() + ", getSubclasses()=" + getSubclasses()
-				+ ", getInterfaces()=" + getInterfaces() + ", getPackageName()=" + getPackageName() + ", isAbstract()="
-				+ isAbstract() + ", isInterface()=" + isInterface() + ", isEnum()=" + isEnum() + ", isAnnotation()="
-				+ isAnnotation() + "]";
+		return "Type=" + getType() + "Name=" + getName() + ", Fields=" + getFields() + ", SuperClassName="
+				+ getSuperClassName() + ", Methods=" + getMethods() + ", Subclasses=" + getSubclasses()
+				+ ", Interfaces=" + getInterfaces() + ", PackageName()=" + getPackageName();
 	}
-
-    // ... other methods for adding and getting relationships
 
 }
 

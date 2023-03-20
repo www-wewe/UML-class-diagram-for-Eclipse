@@ -4,15 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Method in class model.
+ * 
+ * @author Veronika Lenkova
+ */
+
 public class MethodModel {
+
     private String name;
     private String returnType;
     private List<ParameterModel> parameters;
 	private boolean isStatic;
     private boolean isAbstract;
     private Visibility visibility;
-    // ... other properties and methods
-    
+
     public MethodModel() {
     	this.name = null;
         this.returnType = null;
@@ -21,15 +27,6 @@ public class MethodModel {
         this.isAbstract = false;
         this.visibility = Visibility.PUBLIC;
 	}
-
-    public MethodModel(String name, String returnType, List<ParameterModel> parameters, boolean isStatic, boolean isAbstract, Visibility visibility) {
-        this.name = name;
-        this.returnType = returnType;
-        this.parameters = parameters;
-        this.isStatic = isStatic;
-        this.isAbstract = isAbstract;
-        this.visibility = visibility;
-    }
 
 	public String getName() {
         return name;
@@ -91,8 +88,8 @@ public class MethodModel {
 
 	@Override
 	public String toString() {
-		return getVisibility() + " " + getName() + "(" + getParametersString() + ") : " + getReturnType();
+		return getVisibility().character + (isStatic() ? "{static} " : "") + (isAbstract() ? "{abstract} " : "") + 
+				getName() + "(" + getParametersString() + ")" + (getReturnType() == null ? "" : " : " + getReturnType());
 	}
 
-    // ... other methods for setting and getting properties
 }

@@ -1,8 +1,5 @@
-package cz.muni.fi.diagram.handlers;
+package cz.muni.fi.diagram.actions;
 
-import org.eclipse.core.commands.AbstractHandler;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -13,43 +10,53 @@ import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.core.dom.AST;
-import org.eclipse.jdt.core.dom.ASTParser;
-import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jface.action.Action;
 
 import cz.muni.fi.diagram.model.ClassModel;
 import cz.muni.fi.diagram.view.ClassDiagram;
-import cz.muni.fi.diagram.visitors.ClassVisitor;
+import cz.muni.fi.diagram.view.ClassDiagramCanvas;
+import cz.muni.fi.diagram.visitors.ClassModelFactory;
 
-/**
- * DELETE
- * Used only for debugging
- */
-public class GetInfo extends AbstractHandler {
-
+public class WorkspaceDiagramAction extends Action {
+	
+	ClassDiagramCanvas classDiagramCanvas;
+	ClassDiagram classDiagram;
+	/** Nature for java project */
 	private static final String JDT_NATURE = "org.eclipse.jdt.core.javanature";
-	private ClassDiagram classDiagram = new ClassDiagram();
+    
+    public WorkspaceDiagramAction(ClassDiagramCanvas classDiagramCanvas) {
+        setText("Workspace");
+        setToolTipText("Generate class diagram from workspace");
+        this.classDiagramCanvas = classDiagramCanvas;
+    }
+
 	
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
+	   public void run() {
+		    classDiagram = new ClassDiagram();
+			createClassDiagramFromWorkspace();
+			classDiagramCanvas.setClassDiagram(classDiagram);
+	   }
+	
+	/**
+	 * Creates class diagram from workspace
+	 */
+	private void createClassDiagramFromWorkspace() {
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		IWorkspaceRoot root = workspace.getRoot();
 		// Get all projects in the workspace
 		IProject[] projects = root.getProjects();
-		// Loop over all projects
 		/* Loop through the project's resources and identify the classes
-		   by checking their file extensions. */
+		   by checking their nature. */
 		for (IProject project : projects) {
 			try {
 				if (project.isNatureEnabled(JDT_NATURE)) {
-					System.out.print("Working in project " + project.getName());
 					analyseClasses(project);
 				}
 			} catch (CoreException e) {
 				e.printStackTrace();
 			}
 		}
-		return null;
 	}
 
 	private void analyseClasses(IProject project) throws JavaModelException {
@@ -58,34 +65,16 @@ public class GetInfo extends AbstractHandler {
 			if (mypackage.getKind() == IPackageFragmentRoot.K_SOURCE) {
 				createAST(mypackage);
 			}
+
 		}
 	}
 
 	private void createAST(IPackageFragment mypackage) throws JavaModelException {
 		for (ICompilationUnit unit : mypackage.getCompilationUnits()) {
 			// now create the AST for the ICompilationUnits
-			CompilationUnit parse = parse(unit);
-			ClassVisitor visitor = new ClassVisitor();
-			parse.accept(visitor);
-
-			ClassModel classModel = visitor.getClassModel();
-			System.out.print("TU SOOOOOOOOOOM");
-			System.out.print(classModel);
-			
+			ClassModel classModel = ClassModelFactory.createClassModel(unit);
 			classDiagram.addClass(classModel);
 		}
 	}
 
-	/**
-	 * Reads a ICompilationUnit and creates the AST DOM for manipulating the Java source file
-	 * @param unit
-	 * @return
-	 */
-	private CompilationUnit parse(ICompilationUnit unit) {
-		ASTParser parser = ASTParser.newParser(AST.getJLSLatest());
-		parser.setKind(ASTParser.K_COMPILATION_UNIT);
-		parser.setSource(unit);
-		parser.setResolveBindings(true);
-		return (CompilationUnit) parser.createAST(null); // parse
-	}
 }

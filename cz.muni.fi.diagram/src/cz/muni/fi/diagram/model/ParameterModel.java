@@ -1,17 +1,17 @@
 package cz.muni.fi.diagram.model;
 
+/**
+ * One parameter in method model.
+ * 
+ * @author Veronika Lenkova
+ */
+
 public class ParameterModel {
     private String name;
     private String type;
-    // ... other properties and methods
-
-    public ParameterModel(String name, String type) {
-        this.name = name;
-        this.type = type;
-    }
 
     public ParameterModel() {
-		// TODO Auto-generated constructor stub
+		// empty
 	}
 
 	public String getName() {
@@ -34,7 +34,5 @@ public class ParameterModel {
 	public String toString() {
 		return getType() + " " + getName();
 	}
-
-    // ... other methods for setting and getting properties
 	
 }

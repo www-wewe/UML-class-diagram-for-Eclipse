@@ -1,29 +1,25 @@
 package cz.muni.fi.diagram.model;
 
+/**
+ * Field in class model.
+ * 
+ * @author Veronika Lenkova
+ */
+
 public class FieldModel {
     private String name;
     private String type;
 	private boolean isStatic;
     private boolean isFinal;
     private Visibility visibility;
-    // ... other properties and methods
 
     public FieldModel() {
     	this.name = null;
         this.type = null;
         this.isStatic = false;
         this.isFinal = false;
-        this.visibility = Visibility.PUBLIC;
+        this.visibility = Visibility.PACKAGE_PRIVATE;
 	}
-
-	public FieldModel(String name, String type, boolean isStatic, boolean isFinal, Visibility visibility) {
-        this.name = name;
-        this.type = type;
-        this.isStatic = isStatic;
-        this.isFinal = isFinal;
-        this.visibility = visibility;
-    }
-
 
 	public String getName() {
         return name;
@@ -65,12 +61,9 @@ public class FieldModel {
 		this.visibility = visibility;
 	}
 
-    // ... other methods for setting and getting properties
-
     @Override
 	public String toString() {
-    	
-		return  getVisibility() + " " + (isStatic() ? "static " : "") + (isFinal() ? "final " : "") + 
-				getType() + " " + getName();
+		return  getVisibility().character + (isStatic() ? "{static} " : "") + (isFinal() ? "final " : "") + 
+				getName() + (getType() == null ? "" : " : " + getType());
 	}
 }
