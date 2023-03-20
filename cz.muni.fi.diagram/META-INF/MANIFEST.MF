@@ -3,9 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: ClassDiagram
 Bundle-SymbolicName: cz.muni.fi.diagram;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Export-Package: cz.muni.fi.diagram.imagecontrol,
- cz.muni.fi.diagram.imagecontrol.jface,
- cz.muni.fi.diagram.imagecontrol.jface.actions
 Require-Bundle: org.eclipse.fx.ui.workbench3,
  org.eclipse.jdt.core,
  org.eclipse.core.resources,
