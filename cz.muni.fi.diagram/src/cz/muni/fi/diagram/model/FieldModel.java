@@ -4,22 +4,18 @@ package cz.muni.fi.diagram.model;
 /**
  * Field in class model.
  * 
- * @author Veronika Lenkova
+ * @author Veronika Lenková
  */
 
 public class FieldModel {
     private String name;
     private String type;
-	private boolean isStatic;
-    private boolean isFinal;
-    private Visibility visibility;
+	private boolean isStatic = false;
+    private boolean isFinal = false;
+    private Visibility visibility = Visibility.PACKAGE_PRIVATE;
 
     public FieldModel() {
-    	this.name = null;
-        this.type = null;
-        this.isStatic = false;
-        this.isFinal = false;
-        this.visibility = Visibility.PACKAGE_PRIVATE;
+    	// Intentionally empty
 	}
 
 	public String getName() {

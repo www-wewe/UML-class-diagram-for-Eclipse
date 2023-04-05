@@ -1,5 +1,5 @@
 /** Copyright (c) 2023, Veronika Lenková */
-package cz.muni.fi.diagram.ui.view;
+package cz.muni.fi.diagram.ui.image_generator;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
@@ -10,17 +10,18 @@ import org.eclipse.swt.widgets.Display;
 import cz.muni.fi.diagram.model.ClassModel;
 import cz.muni.fi.diagram.model.FieldModel;
 import cz.muni.fi.diagram.model.MethodModel;
+import cz.muni.fi.diagram.ui.view.ClassDiagram;
 import net.sourceforge.plantuml.SourceStringReader;
 
 /**
  * Class which reads Class Diagram data and generate Image using PlantUML.
- * @author Veronika Lenkova
+ * @author Veronika Lenková
  *
  */
 public final class PlantUMLImageGenerator implements IClassDiagramImageGenerator {
 
-	PlantUMLImageGenerator() {
-		// Empty
+	public PlantUMLImageGenerator() {
+		// Intentionally empty
 	}
 
 	@Override

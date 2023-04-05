@@ -4,7 +4,7 @@ package cz.muni.fi.diagram.model;
 /**
  * One parameter in method model.
  * 
- * @author Veronika Lenkova
+ * @author Veronika Lenková
  */
 
 public class ParameterModel {
@@ -12,7 +12,7 @@ public class ParameterModel {
     private String type;
 
     public ParameterModel() {
-		// empty
+		// Intentionally empty
 	}
 
 	public String getName() {

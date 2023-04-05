@@ -8,18 +8,20 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import cz.muni.fi.diagram.model.ClassModel;
+import cz.muni.fi.diagram.ui.image_generator.IClassDiagramImageGenerator;
+import cz.muni.fi.diagram.ui.image_generator.PlantUMLImageGenerator;
 
 /**
  * A canvas that displays a UML class diagram.
  * 
- * @author Veronika Lenkova
+ * @author Veronika Lenková
  */
 public class ClassDiagramCanvas extends Canvas {
 	/** Class diagram **/
 	private ClassDiagram classDiagram;
 	/** Actually displayed image in canvas **/
 	private Image image = null;
-
+	/** Image generator which can generate image from class diagram */
 	private IClassDiagramImageGenerator imageGenerator = new PlantUMLImageGenerator();
 
 	/**
@@ -61,9 +63,7 @@ public class ClassDiagramCanvas extends Canvas {
 		gc.setBackground(white);
 		gc.fillRectangle(clientArea);*/
 
-    	// TODO draw only if the class is dropped to the canvas
     	if (!classDiagram.isEmpty()) {
-    		image = imageGenerator.getImage(classDiagram);
     		Rectangle canvasBounds = getBounds();
             int imgX = (canvasBounds.width - image.getBounds().width) / 2;
             int imgY = (canvasBounds.height - image.getBounds().height) / 2;
@@ -71,8 +71,6 @@ public class ClassDiagramCanvas extends Canvas {
 
             setSize(image.getBounds().width + 50, image.getBounds().height + 50);
             getParent().setSize(image.getBounds().width + 100, image.getBounds().height + 50);
-
-            image.dispose();
         }
     }
 
@@ -84,6 +82,10 @@ public class ClassDiagramCanvas extends Canvas {
 	public boolean addClass(ClassModel classModel) {
         // add a new class to the diagram
 		if (classDiagram.addClass(classModel)) {
+			if (image != null) {
+				image.dispose();
+			}
+			image = imageGenerator.getImage(classDiagram);
 			redraw();
 			return true;
 		}

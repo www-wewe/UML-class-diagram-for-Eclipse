@@ -11,16 +11,21 @@ import cz.muni.fi.diagram.model.ClassModel;
 /**
  * Creates class model from given Compilation Unit using ClassVisitor.
  * 
- * @author Veronika Lenkova
+ * @author Veronika Lenková
  */
 public class ClassModelParser {
 	
 	private ClassModelParser() {
-		//empty
+		// Intentionally empty
 	}
 
-	public static ClassModel createClassModel(ICompilationUnit unit) {
-		CompilationUnit parse = parse(unit);
+	/**
+	 * Parses CompilationUnit and using ClassVisitor creates ClassModel.
+	 * @param compilationUnit
+	 * @return ClassModel
+	 */
+	public static ClassModel createClassModel(ICompilationUnit compilationUnit) {
+		CompilationUnit parse = parse(compilationUnit);
 		ClassVisitor visitor = new ClassVisitor();
 		parse.accept(visitor);
 		return visitor.getClassModel();

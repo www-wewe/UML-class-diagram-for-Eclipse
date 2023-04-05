@@ -14,7 +14,7 @@ import cz.muni.fi.diagram.ui.view.ClassDiagramCanvas;
  * After detecting dropped class in ClassDiagramCanvas,
  * ClassModel is created and added to ClassDiagram.
  * 
- * @author Veronika Lenkova
+ * @author Veronika Lenková
  */
 public class DiagramDropListener implements DropTargetListener {
 	

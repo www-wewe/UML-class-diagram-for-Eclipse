@@ -2,9 +2,9 @@
 package cz.muni.fi.diagram.model;
 
 /**
- * Class Type
+ * Class Type.
  * 
- * @author Veronika Lenkova
+ * @author Veronika Lenková
  */
 public enum ClassType {
 	ENUM("enum"), CLASS("class"), INTERFACE("interface"), ABSTRACT_CLASS("abstract class");

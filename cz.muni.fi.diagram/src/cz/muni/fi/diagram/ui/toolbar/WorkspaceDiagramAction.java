@@ -19,9 +19,9 @@ import cz.muni.fi.diagram.ui.view.ClassDiagram;
 import cz.muni.fi.diagram.ui.view.ClassDiagramCanvas;
 
 /**
- * Creates class diagram from workspace
+ * Creates class diagram from workspace.
  * 
- * @author nxf92568
+ * @author Veronika Lenková
  *
  */
 public class WorkspaceDiagramAction extends Action {

@@ -7,6 +7,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTarget;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
@@ -38,16 +39,24 @@ public class ClassDiagramView extends ViewPart {
     @Override
     public void createPartControl(Composite parent) {
     	this.parent = parent;
-    	// set the size of the scrolled content - method 1
         final ScrolledComposite scrolledComposite = new ScrolledComposite(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
         final Composite mainComposite = new Composite(scrolledComposite, SWT.NONE);
         scrolledComposite.setContent(mainComposite);
         GridLayout layout = new GridLayout();
         mainComposite.setLayout(layout);
+
         Label label = new Label (mainComposite, SWT.NONE);
         label.setText("Drop a Java class to generate a class diagram.");
- 
+        GridData labelGridData = new GridData();
+        label.setLayoutData(labelGridData);
+        labelGridData.exclude = false;
+        //label.setVisible(false);
+
         classDiagramCanvas = new ClassDiagramCanvas(mainComposite, classDiagram);
+        GridData canvasGridData = new GridData();
+        classDiagramCanvas.setLayoutData(canvasGridData);
+        canvasGridData.exclude = false;
+
         scrolledComposite.setMinSize(400, 750);
         scrolledComposite.setSize(400, 750);
         mainComposite.setSize(400, 750);

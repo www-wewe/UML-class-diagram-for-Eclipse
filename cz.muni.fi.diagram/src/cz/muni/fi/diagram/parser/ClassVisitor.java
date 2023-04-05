@@ -23,12 +23,18 @@ import cz.muni.fi.diagram.model.ParameterModel;
 import cz.muni.fi.diagram.model.Visibility;
 import cz.muni.fi.diagram.ui.view.ClassDiagram;
 
+/**
+ * AST Visitor which visits CompilationUnit by {@code unit.accept(ASTVisitor)}
+ * and reads information from it.
+ * 
+ * @author Veronika Lenková
+ */
 public class ClassVisitor extends ASTVisitor {
 	ClassModel classModel = new ClassModel();
 	ClassDiagram classDiagram;
 
 	public ClassVisitor() {
-		// ...
+		// Intentionally empty
 	}
 
 	public ClassModel getClassModel() {

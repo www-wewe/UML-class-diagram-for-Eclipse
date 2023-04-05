@@ -8,25 +8,20 @@ import java.util.stream.Collectors;
 /**
  * Method in class model.
  * 
- * @author Veronika Lenkova
+ * @author Veronika Lenková
  */
 
 public class MethodModel {
 
     private String name;
     private String returnType;
-    private List<ParameterModel> parameters;
-	private boolean isStatic;
-    private boolean isAbstract;
-    private Visibility visibility;
+    private List<ParameterModel> parameters = new ArrayList<>();
+	private boolean isStatic = false;
+    private boolean isAbstract = false;
+    private Visibility visibility = Visibility.PUBLIC;
 
     public MethodModel() {
-    	this.name = null;
-        this.returnType = null;
-        this.parameters = new ArrayList<>();
-        this.isStatic = false;
-        this.isAbstract = false;
-        this.visibility = Visibility.PUBLIC;
+    	// Intentionally empty
 	}
 
 	public String getName() {
@@ -41,7 +36,7 @@ public class MethodModel {
         return parameters;
     }
 
-    public String getParametersString() {
+    public String getParametersToString() {
     	return parameters.stream()
     		      .map(ParameterModel::toString)
     		      .collect(Collectors.joining(", ", "", ""));
@@ -90,7 +85,7 @@ public class MethodModel {
 	@Override
 	public String toString() {
 		return getVisibility().character + (isStatic() ? "{static} " : "") + (isAbstract() ? "{abstract} " : "") + 
-				getName() + "(" + getParametersString() + ")" + (getReturnType() == null ? "" : " : " + getReturnType());
+				getName() + "(" + getParametersToString() + ")" + (getReturnType() == null ? "" : " : " + getReturnType());
 	}
 
 }

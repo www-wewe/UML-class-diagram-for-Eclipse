@@ -5,7 +5,7 @@ package cz.muni.fi.diagram.model;
  * Visibility of methods and fields.
  * PlantUML syntax.
  * 
- * @author nxf92568
+ * @author Veronika Lenková.
  */
 public enum Visibility {
 	PRIVATE("-"), PUBLIC("+"), PROTECTED("#"), PACKAGE_PRIVATE("~");

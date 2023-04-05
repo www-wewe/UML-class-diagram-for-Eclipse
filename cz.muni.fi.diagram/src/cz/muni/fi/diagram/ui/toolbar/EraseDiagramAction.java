@@ -7,6 +7,11 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import cz.muni.fi.diagram.ui.view.ClassDiagram;
 import cz.muni.fi.diagram.ui.view.ClassDiagramCanvas;
 
+/**
+ * Action for erasing the whole class diagram.
+ * 
+ * @author Veronika Lenková
+ */
 public class EraseDiagramAction extends Action {
 	
 	ClassDiagramCanvas canvas;

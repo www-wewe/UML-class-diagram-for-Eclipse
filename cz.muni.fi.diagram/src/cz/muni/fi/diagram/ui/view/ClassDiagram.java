@@ -12,7 +12,7 @@ import cz.muni.fi.diagram.model.Relationship;
 /**
  * Class representing class diagram.
  * 
- * @author Veronika Lenkova
+ * @author Veronika Lenková
  *
  */
 public class ClassDiagram {

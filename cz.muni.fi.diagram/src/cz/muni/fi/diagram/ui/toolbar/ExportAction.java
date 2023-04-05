@@ -10,6 +10,11 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 import cz.muni.fi.diagram.ui.view.ClassDiagramCanvas;
 
+/**
+ * Action for export image of diagram to .PNG file.
+ * 
+ * @author Veronika Lenková
+ */
 public class ExportAction extends Action {
 	
 	ClassDiagramCanvas classDiagramCanvas;
@@ -36,7 +41,7 @@ public class ExportAction extends Action {
         }
         image.dispose();
     }
-    
+
     public String openFileDialog() {
         FileDialog fileDialog = new FileDialog(shell, SWT.SAVE);
         fileDialog.setFilterNames(new String[] { "PNG Images (*.png)", "All Files (*.*)" });

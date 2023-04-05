@@ -11,26 +11,20 @@ import cz.muni.fi.diagram.parser.ClassModelParser;
 /**
  * Model of one class in class diagram.
  * 
- * @author Veronika Lenkova
+ * @author Veronika Lenková
  */
 public class ClassModel {
 	ClassType type;
 	private String name;
 	private String packageName;
 	private String superClassName;
-    private List<FieldModel> fields;
-    private List<MethodModel> methods;
-    private List<String> subclasses;
-    private List<String> interfaces;
+    private List<FieldModel> fields = new ArrayList<>();
+    private List<MethodModel> methods = new ArrayList<>();
+    private List<String> subclasses = new ArrayList<>();
+    private List<String> interfaces = new ArrayList<>();
 
     public ClassModel() {
-    	this.name = null;
-    	this.type = null;
-    	this.fields = new ArrayList<>();
-        this.methods = new ArrayList<>();
-        this.superClassName = null;
-        this.subclasses = new ArrayList<>();
-        this.interfaces = new ArrayList<>();
+    	// Intentionally empty
 	}
 
 	public void setType(ClassType type) {
