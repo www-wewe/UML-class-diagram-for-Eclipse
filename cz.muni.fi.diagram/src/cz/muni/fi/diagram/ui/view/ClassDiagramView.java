@@ -34,11 +34,9 @@ public class ClassDiagramView extends ViewPart {
 	private ClassDiagram classDiagram = new ClassDiagram();
 	/** Canvas with class diagram **/
 	private ClassDiagramCanvas classDiagramCanvas;
-	Composite parent;
 
     @Override
     public void createPartControl(Composite parent) {
-    	this.parent = parent;
         final ScrolledComposite scrolledComposite = new ScrolledComposite(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
         final Composite mainComposite = new Composite(scrolledComposite, SWT.NONE);
         scrolledComposite.setContent(mainComposite);
