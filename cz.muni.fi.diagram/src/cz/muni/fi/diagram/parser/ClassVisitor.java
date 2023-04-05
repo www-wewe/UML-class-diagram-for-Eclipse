@@ -1,11 +1,12 @@
 /** Copyright (c) 2023, Veronika Lenková */
-package cz.muni.fi.diagram.visitors;
+package cz.muni.fi.diagram.parser;
 
 import java.lang.reflect.Modifier;
 import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTVisitor;
+import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.EnumConstantDeclaration;
 import org.eclipse.jdt.core.dom.EnumDeclaration;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
@@ -20,12 +21,12 @@ import cz.muni.fi.diagram.model.FieldModel;
 import cz.muni.fi.diagram.model.MethodModel;
 import cz.muni.fi.diagram.model.ParameterModel;
 import cz.muni.fi.diagram.model.Visibility;
-import cz.muni.fi.diagram.view.ClassDiagram;
+import cz.muni.fi.diagram.ui.view.ClassDiagram;
 
 public class ClassVisitor extends ASTVisitor {
 	ClassModel classModel = new ClassModel();
 	ClassDiagram classDiagram;
-	
+
 	public ClassVisitor() {
 		// ...
 	}
@@ -49,8 +50,8 @@ public class ClassVisitor extends ASTVisitor {
             Type t = (Type) o;
             classModel.addInterfaceName(t.toString());
         }
-
-        // Set list of subclasses
+        
+        /* Set list of subclasses
         for (TypeDeclaration type : node.getTypes()) {
         	System.out.print("PREČO JE LIST EMPTY, KEĎ MA DETI? \n");
             // Check if the type extends the superclass
@@ -59,7 +60,7 @@ public class ClassVisitor extends ASTVisitor {
                 String subclass = type.getName().getFullyQualifiedName();
                 classModel.addSubclass(subclass);
             }
-        }
+        }*/
 
         return true;
     }

@@ -1,5 +1,5 @@
 /** Copyright (c) 2023, Veronika Lenková */
-package cz.muni.fi.diagram.visitors;
+package cz.muni.fi.diagram.parser;
 
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.dom.AST;
@@ -13,9 +13,9 @@ import cz.muni.fi.diagram.model.ClassModel;
  * 
  * @author Veronika Lenkova
  */
-public class ClassModelFactory {
+public class ClassModelParser {
 	
-	private ClassModelFactory() {
+	private ClassModelParser() {
 		//empty
 	}
 

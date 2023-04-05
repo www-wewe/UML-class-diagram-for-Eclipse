@@ -1,5 +1,5 @@
 /** Copyright (c) 2023, Veronika Lenková */
-package cz.muni.fi.diagram.listeners;
+package cz.muni.fi.diagram.ui.listeners;
 
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -7,18 +7,19 @@ import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.DropTargetListener;
 
 import cz.muni.fi.diagram.model.ClassModel;
-import cz.muni.fi.diagram.view.ClassDiagramCanvas;
-import cz.muni.fi.diagram.visitors.ClassModelFactory;
+import cz.muni.fi.diagram.parser.ClassModelParser;
+import cz.muni.fi.diagram.ui.view.ClassDiagramCanvas;
 
 /**
- * OR nested classDiagramView class? TODO
+ * After detecting dropped class in ClassDiagramCanvas,
+ * ClassModel is created and added to ClassDiagram.
  * 
- * @author nxf92568
+ * @author Veronika Lenkova
  */
 public class DiagramDropListener implements DropTargetListener {
 	
 	ClassDiagramCanvas classDiagramCanvas;
-	
+
 	public DiagramDropListener(ClassDiagramCanvas classDiagramCanvas) {
 		this.classDiagramCanvas = classDiagramCanvas;
 	}
@@ -32,8 +33,8 @@ public class DiagramDropListener implements DropTargetListener {
 		    if (firstElement instanceof ICompilationUnit) {
 		        // The dropped object is an ICompilationUnit
 		        compilationUnit = (ICompilationUnit) firstElement;
-			    assert compilationUnit != null; // delete assert
-		        ClassModel classModel = ClassModelFactory.createClassModel(compilationUnit);
+			    assert compilationUnit != null; // delete assert ?
+		        ClassModel classModel = ClassModel.create(compilationUnit);
 		        classDiagramCanvas.addClass(classModel);
 		    }
 		}

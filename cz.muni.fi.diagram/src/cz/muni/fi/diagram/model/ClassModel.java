@@ -4,6 +4,10 @@ package cz.muni.fi.diagram.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jdt.core.ICompilationUnit;
+
+import cz.muni.fi.diagram.parser.ClassModelParser;
+
 /**
  * Model of one class in class diagram.
  * 
@@ -107,6 +111,15 @@ public class ClassModel {
 
 	public void setPackageName(String packageName) {
 		this.packageName = packageName;
+	}
+
+	/**
+	 * Creates Class Model from CompilationUnit
+	 * @param unit
+	 * @return Class Model
+	 */
+	public static ClassModel create(ICompilationUnit unit) {
+		return ClassModelParser.createClassModel(unit);
 	}
 
 	@Override

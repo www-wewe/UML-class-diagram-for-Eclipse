@@ -1,66 +1,49 @@
 /** Copyright (c) 2023, Veronika Lenková */
-package cz.muni.fi.diagram.view;
+package cz.muni.fi.diagram.ui.view;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
+
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 
 import cz.muni.fi.diagram.model.ClassModel;
 import cz.muni.fi.diagram.model.FieldModel;
 import cz.muni.fi.diagram.model.MethodModel;
-import cz.muni.fi.diagram.model.Relationship;
+import net.sourceforge.plantuml.SourceStringReader;
 
 /**
- * Class representing class diagram.
- * 
+ * Class which reads Class Diagram data and generate Image using PlantUML.
  * @author Veronika Lenkova
  *
  */
-public class ClassDiagram {
-    private List<ClassModel> classes;
-    // delete TODO
-    private List<Relationship> relationships;
-    private String packageName;
+public final class PlantUMLImageGenerator implements IClassDiagramImageGenerator {
 
-    public ClassDiagram() {
-        this.classes = new ArrayList<>();
-        this.relationships = new ArrayList<>();
-    }
+	PlantUMLImageGenerator() {
+		// Empty
+	}
 
-    public void clear() {
-    	classes.clear();
-    	relationships.clear();
-    }
+	@Override
+	public Image getImage(ClassDiagram classDiagram) {
+		return generateImage(classDiagram);
+	}
 
-    public void setPackageName(String packageName) {
-        this.packageName = packageName;
-    }
-
-    public String getPackageName() {
-        return packageName;
-    }
-
-    public boolean addClass(ClassModel classModel) {
-    	if (classModel.getName() == null) {
-			return false;
+	/**
+	 * @param classDiagram
+	 * @return generated Image
+	 */
+	public static Image generateImage(ClassDiagram classDiagram) {
+		String diagramPlantUMLSource = getPlantUMLSource(classDiagram);
+		ByteArrayOutputStream pngStream = new ByteArrayOutputStream();
+		SourceStringReader reader = new SourceStringReader(diagramPlantUMLSource);
+		try (FileOutputStream fos = new FileOutputStream("mydiagram.png")) {
+			reader.generateImage(pngStream);
+			fos.write(pngStream.toByteArray());
+		} catch (Exception e1) {
+			e1.printStackTrace();
 		}
-		if (getClasses().stream().noneMatch(x -> x.getName().equals(classModel.getName()))) {
-			classes.add(classModel);
-			return true;
-		}
-		return false;        
-    }
-
-    public List<ClassModel> getClasses() {
-        return classes;
-    }
-
-    public void addRelationship(Relationship relationship) {
-        relationships.add(relationship);
-    }
-
-    public List<Relationship> getRelationships() {
-        return relationships;
-    }
+		return new Image(Display.getDefault(), "mydiagram.png");
+	}
 
     /**
      * Gets PlantUML source code which will be used for generating image from it.
@@ -68,10 +51,10 @@ public class ClassDiagram {
      * 
      * @return PlantUML text
      */
-	public String getPlantUMLSource() {
+	private static String getPlantUMLSource(ClassDiagram classDiagram) {
 		StringBuilder source = new StringBuilder("@startuml\n");
 		StringBuilder relationshipsString = new StringBuilder();
-		for (ClassModel classModel : getClasses()) {
+		for (ClassModel classModel : classDiagram.getClasses()) {
 			StringBuilder oneClass =  new StringBuilder();
 			oneClass.append(classModel.getType().character).append(" ");
 			oneClass.append(classModel.getName()).append(" {\n");
@@ -97,8 +80,8 @@ public class ClassDiagram {
 		}
 		source.append(relationshipsString);
 		source.append("@enduml\n");
-		System.out.print(source);
+		//System.out.print(source);
 		return source.toString();
 	}
-}
 
+}

@@ -1,5 +1,5 @@
 /** Copyright (c) 2023, Veronika Lenková */
-package cz.muni.fi.diagram.actions;
+package cz.muni.fi.diagram.ui.toolbar;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
@@ -14,10 +14,16 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.action.Action;
 
 import cz.muni.fi.diagram.model.ClassModel;
-import cz.muni.fi.diagram.view.ClassDiagram;
-import cz.muni.fi.diagram.view.ClassDiagramCanvas;
-import cz.muni.fi.diagram.visitors.ClassModelFactory;
+import cz.muni.fi.diagram.parser.ClassModelParser;
+import cz.muni.fi.diagram.ui.view.ClassDiagram;
+import cz.muni.fi.diagram.ui.view.ClassDiagramCanvas;
 
+/**
+ * Creates class diagram from workspace
+ * 
+ * @author nxf92568
+ *
+ */
 public class WorkspaceDiagramAction extends Action {
 	
 	ClassDiagramCanvas classDiagramCanvas;
@@ -38,10 +44,7 @@ public class WorkspaceDiagramAction extends Action {
 			createClassDiagramFromWorkspace();
 			classDiagramCanvas.setClassDiagram(classDiagram);
 	   }
-	
-	/**
-	 * Creates class diagram from workspace
-	 */
+
 	private void createClassDiagramFromWorkspace() {
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		IWorkspaceRoot root = workspace.getRoot();
@@ -73,7 +76,7 @@ public class WorkspaceDiagramAction extends Action {
 	private void createAST(IPackageFragment mypackage) throws JavaModelException {
 		for (ICompilationUnit unit : mypackage.getCompilationUnits()) {
 			// now create the AST for the ICompilationUnits
-			ClassModel classModel = ClassModelFactory.createClassModel(unit);
+			ClassModel classModel = ClassModelParser.createClassModel(unit);
 			classDiagram.addClass(classModel);
 		}
 	}
