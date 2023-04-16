@@ -27,12 +27,17 @@ import cz.muni.fi.diagram.ui.view.ClassDiagramCanvas;
  *
  */
 public class WorkspaceDiagramAction extends Action {
-	
-	ClassDiagramCanvas classDiagramCanvas;
-	ClassDiagram classDiagram;
+
+	/** Canvas with class diagram */
+	private ClassDiagramCanvas classDiagramCanvas;
+	/** Class diagram **/
+	private ClassDiagram classDiagram;
 	/** Nature for java project */
 	private static final String JDT_NATURE = "org.eclipse.jdt.core.javanature";
-    
+
+	/**
+	 * @param classDiagramCanvas with diagram
+	 */
     public WorkspaceDiagramAction(ClassDiagramCanvas classDiagramCanvas) {
         setText("Workspace");
         setToolTipText("Generate class diagram from workspace");
@@ -50,6 +55,9 @@ public class WorkspaceDiagramAction extends Action {
 			classDiagramCanvas.setClassDiagram(classDiagram);
 	   }
 
+	/**
+	 * Analyze classes in workspace and creates class diagram from them.
+	 */
 	private void createClassDiagramFromWorkspace() {
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		IWorkspaceRoot root = workspace.getRoot();
@@ -68,6 +76,12 @@ public class WorkspaceDiagramAction extends Action {
 		}
 	}
 
+	/**
+	 * Analyse classes and create class diagram by creating their AST.
+	 * 
+	 * @param project
+	 * @throws JavaModelException - if package element does not exist or if an exception occurs while accessing its corresponding resource.
+	 */
 	private void analyseClasses(IProject project) throws JavaModelException {
 		IPackageFragment[] packages = JavaCore.create(project).getPackageFragments();
 		for (IPackageFragment mypackage : packages) {
@@ -78,6 +92,12 @@ public class WorkspaceDiagramAction extends Action {
 		}
 	}
 
+	/**
+	 * Creates AST for every class within mypackage and adds it to class diagram.
+	 * 
+	 * @param mypackage with classes
+	 * @throws JavaModelException - if package element does not exist or if an exception occurs while accessing its corresponding resource.
+	 */
 	private void createAST(IPackageFragment mypackage) throws JavaModelException {
 		for (ICompilationUnit unit : mypackage.getCompilationUnits()) {
 			// now create the AST for the ICompilationUnits

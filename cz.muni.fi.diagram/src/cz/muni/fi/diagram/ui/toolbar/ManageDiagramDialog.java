@@ -39,7 +39,8 @@ public class ManageDiagramDialog extends Dialog {
 	private List<ClassModel> classModels;
 	/** List viewer with class models */
     private ListViewer listViewer;
-    
+    /** Constant for default scale */
+    private static final int DEFAULT_SCALE = -1;
     Button checkboxHideField;
     Button checkboxHideMethod;
     // TODO
@@ -139,14 +140,14 @@ public class ManageDiagramDialog extends Dialog {
         Label width = new Label(dialog, SWT.NONE);
         width.setText("Scale width:");
         scaleWidthText = new Text(dialog, SWT.BORDER);
-        if (classDiagram.getScaleWidth() != -1) {        	
+        if (classDiagram.getScaleWidth() != DEFAULT_SCALE) {        	
         	scaleWidthText.setText(String.valueOf(classDiagram.getScaleWidth()));
         }
 
         Label height = new Label(dialog, SWT.NONE);
         height.setText("Scale height:");
         scaleHeightText = new Text(dialog, SWT.BORDER);
-        if (classDiagram.getScaleHeight() != -1) {        	
+        if (classDiagram.getScaleHeight() != DEFAULT_SCALE) {        	
         	scaleHeightText.setText(String.valueOf(classDiagram.getScaleHeight()));
         }
 	}
@@ -164,9 +165,13 @@ public class ManageDiagramDialog extends Dialog {
 
     	if (check(scaleHeightText)) {
     		classDiagram.setScaleHeight(Integer.parseInt(scaleHeightText.getText()));
+    	} else {
+    		classDiagram.setScaleHeight(DEFAULT_SCALE);
     	}
-    	if (check(scaleHeightText)) {    		
+    	if (check(scaleWidthText)) {
     		classDiagram.setScaleWidth(Integer.parseInt(scaleWidthText.getText()));
+    	} else {
+    		classDiagram.setScaleWidth(DEFAULT_SCALE);
     	}
     	
     	classDiagramCanvas.setClassDiagram(classDiagram);

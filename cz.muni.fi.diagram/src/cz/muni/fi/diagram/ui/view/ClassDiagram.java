@@ -88,7 +88,6 @@ public class ClassDiagram {
     }
 
     /**
-     * 
      * @return true if the class diagram is empty, false otherwise
      */
     public boolean isEmpty() {

@@ -19,9 +19,13 @@ import cz.muni.fi.diagram.ui.view.ClassDiagramCanvas;
  * @author Veronika Lenková
  */
 public class DiagramDropListener implements DropTargetListener {
-	
-	ClassDiagramCanvas classDiagramCanvas;
 
+	/** Canvas with class diagram */
+	private ClassDiagramCanvas classDiagramCanvas;
+
+	/**
+	 * @param classDiagramCanvas where the class is dropped
+	 */
 	public DiagramDropListener(ClassDiagramCanvas classDiagramCanvas) {
 		this.classDiagramCanvas = classDiagramCanvas;
 	}

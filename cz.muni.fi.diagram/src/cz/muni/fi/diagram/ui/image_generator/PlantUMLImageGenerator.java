@@ -30,14 +30,18 @@ public final class PlantUMLImageGenerator implements IClassDiagramImageGenerator
 	private static final String END_PLANT_UML = "@enduml\n";
 	/** Newline character */
 	private static final String NEWLINE = "\n";
+	/** Space character */
 	private static final String SPACE = " ";
+	/** Constant for scale */
 	private static final String SCALE = "scale";
+	/** Constant for width */
 	private static final String WIDTH = "width";
+	/** Constant for height */
 	private static final String HEIGHT = "height";
+	/** Constant for hide fields */
 	private static final String HIDE_FIELDS = "hide fields";
+	/** Constant for hide methods */
 	private static final String HIDE_METHODS = "hide methods";
-	private static final String HIDE_INTERFACE = "hide interface";
-	private static final String HIDE_ENUM = "hide enum";
 
 	public PlantUMLImageGenerator() {
 		// Intentionally empty
@@ -75,16 +79,12 @@ public final class PlantUMLImageGenerator implements IClassDiagramImageGenerator
 	private String getPlantUMLSource(ClassDiagram classDiagram) {
 		boolean showPackage = !classDiagram.isHidePackage();
 		StringBuilder source = new StringBuilder(START_PLANT_UML);
-//		source.append("scale 5000 width" + NEWLINE);
 		StringBuilder relationshipsString = new StringBuilder();
 		for (ClassModel classModel : classDiagram.getClasses()) {
 			if (showPackage) {
 				source.append("package " + classModel.getPackageName() + " {" + NEWLINE);
 			}
 			addClassToPlantUML(source, relationshipsString, classModel);
-			for (ClassModel nestedClass : classModel.getNestedClasses()) {
-				addClassToPlantUML(source, relationshipsString, nestedClass);
-			}
 			if (showPackage) {				
 				source.append("}" + NEWLINE);
 			}
@@ -92,7 +92,7 @@ public final class PlantUMLImageGenerator implements IClassDiagramImageGenerator
 		source.append(relationshipsString);
 		setSettings(source);
 		source.append(END_PLANT_UML);
-		System.out.print(source);
+//		System.out.print(source);
 		return source.toString();
 	}
 
@@ -102,12 +102,6 @@ public final class PlantUMLImageGenerator implements IClassDiagramImageGenerator
 		}
 		if (classDiagram.isHideMethods()) {
 			source.append(HIDE_METHODS + NEWLINE);
-		}
-		if (classDiagram.isHideInterface()) {
-			source.append(HIDE_INTERFACE + NEWLINE);
-		}
-		if (classDiagram.isHideEnum()) {
-			source.append(HIDE_ENUM + NEWLINE);
 		}
 		int scaleWidth = classDiagram.getScaleWidth();
 		if (scaleWidth != -1) {
@@ -147,6 +141,7 @@ public final class PlantUMLImageGenerator implements IClassDiagramImageGenerator
 		}
 		for (ClassModel nestedClass : classModel.getNestedClasses()) {
 			relationshipsString.append(classModel.getName()).append(" +-- ").append(nestedClass.getName()).append(NEWLINE);
+			addClassToPlantUML(source, relationshipsString, nestedClass);
 		}
 		oneClass.append("}" + NEWLINE);
 		source.append(oneClass);

@@ -13,7 +13,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
 import cz.muni.fi.diagram.ui.listeners.DiagramDropListener;
-import cz.muni.fi.diagram.ui.toolbar.EraseDiagramAction;
 import cz.muni.fi.diagram.ui.toolbar.ExportAction;
 import cz.muni.fi.diagram.ui.toolbar.ManageDiagramAction;
 import cz.muni.fi.diagram.ui.toolbar.WorkspaceDiagramAction;
@@ -48,9 +47,6 @@ public class ClassDiagramView extends ViewPart {
         classDiagramCanvas.setLayoutData(canvasGridData);
         canvasGridData.exclude = true;
 
-        System.out.print("TUUUU: ");
-        System.out.print(parent.getDisplay().getClientArea().height);
-        System.out.print(parent.getDisplay().getClientArea().width);
         scrolledComposite.setMinSize(400, 750);
         scrolledComposite.setSize(400, 750);
         mainComposite.setSize(400, 750);

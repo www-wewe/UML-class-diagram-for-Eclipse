@@ -87,6 +87,7 @@ public class ClassDiagramCanvas extends Canvas {
 
     /**
      * Adds classModel representing one class to class diagram.
+     * 
      * @param classModel
      * @return true if class was added - false otherwise (class is already in diagram)
      */
