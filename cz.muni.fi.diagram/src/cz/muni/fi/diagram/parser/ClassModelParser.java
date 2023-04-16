@@ -28,7 +28,9 @@ public class ClassModelParser {
 		CompilationUnit parse = parse(compilationUnit);
 		ClassVisitor visitor = new ClassVisitor();
 		parse.accept(visitor);
-		return visitor.getClassModel();
+		ClassModel classModel = visitor.getClassModel();
+		classModel.setPackageName(compilationUnit.getJavaProject().getElementName());
+		return classModel;
 	}
 
 	/**

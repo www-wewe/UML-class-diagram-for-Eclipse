@@ -20,11 +20,21 @@ public class ClassModel {
 	private String superClassName;
     private List<FieldModel> fields = new ArrayList<>();
     private List<MethodModel> methods = new ArrayList<>();
-    private List<String> subclasses = new ArrayList<>();
+    private List<ClassModel> nestedClasses = new ArrayList<>();
+    private List<String> subClasses = new ArrayList<>();
     private List<String> interfaces = new ArrayList<>();
 
     public ClassModel() {
     	// Intentionally empty
+	}
+
+    /**
+	 * Creates Class Model from CompilationUnit
+	 * @param unit
+	 * @return Class Model
+	 */
+	public static ClassModel create(ICompilationUnit unit) {
+		return ClassModelParser.createClassModel(unit);
 	}
 
 	public void setType(ClassType type) {
@@ -47,7 +57,7 @@ public class ClassModel {
 		this.superClassName = name;
 	}
 
-	public void addInterfaceName(String name) {
+	public void addInterface(String name) {
 		this.interfaces.add(name);
 	}
 
@@ -75,16 +85,12 @@ public class ClassModel {
 		this.methods = methods;
 	}
 
-	public List<String> getSubclasses() {
-		return subclasses;
+	public List<ClassModel> getNestedClasses() {
+		return nestedClasses;
 	}
 
-	public void setSubclasses(List<String> subclasses) {
-		this.subclasses = subclasses;
-	}
-	
-	public void addSubclass(String subclassName) {
-		this.subclasses.add(subclassName);
+	public void setNestedClasses(List<ClassModel> subclasses) {
+		this.nestedClasses = subclasses;
 	}
 
 	public List<String> getInterfaces() {
@@ -107,21 +113,21 @@ public class ClassModel {
 		this.packageName = packageName;
 	}
 
-	/**
-	 * Creates Class Model from CompilationUnit
-	 * @param unit
-	 * @return Class Model
-	 */
-	public static ClassModel create(ICompilationUnit unit) {
-		return ClassModelParser.createClassModel(unit);
+	public List<String> getSubClasses() {
+		return subClasses;
+	}
+
+	public void setSubClasses(List<String> subClasses) {
+		this.subClasses = subClasses;
+	}
+
+	public void addSubClass(String classModel) {
+		this.subClasses.add(classModel);
 	}
 
 	@Override
 	public String toString() {
-		return "Type=" + getType() + "Name=" + getName() + ", Fields=" + getFields() + ", SuperClassName="
-				+ getSuperClassName() + ", Methods=" + getMethods() + ", Subclasses=" + getSubclasses()
-				+ ", Interfaces=" + getInterfaces() + ", PackageName()=" + getPackageName();
+		return getName();
 	}
-
 }
 

@@ -1,13 +1,15 @@
 /** Copyright (c) 2023, Veronika Lenková */
 package cz.muni.fi.diagram.model;
 
+import cz.muni.fi.diagram.parser.IPlantUMLString;
+
 /**
  * Field in class model.
  * 
  * @author Veronika Lenková
  */
 
-public class FieldModel {
+public class FieldModel implements IPlantUMLString {
     private String name;
     private String type;
 	private boolean isStatic = false;
@@ -60,7 +62,15 @@ public class FieldModel {
 
     @Override
 	public String toString() {
-		return  getVisibility().character + (isStatic() ? "{static} " : "") + (isFinal() ? "final " : "") + 
+		return  getVisibility().character + (isStatic() ? "static " : "") + (isFinal() ? "final " : "") + 
 				getName() + (getType() == null ? "" : " : " + getType());
+	}
+
+	@Override
+	public String toPlantUMLString() {
+		int indexOfDelimeter = getName().indexOf('=');
+		String fieldName = indexOfDelimeter == -1 ? getName() : getName().substring(0, indexOfDelimeter);
+		return  getVisibility().character + (isStatic() ? "{static} " : "") + (isFinal() ? "final " : "") + 
+				fieldName + (getType() == null ? "" : " : " + getType());
 	}
 }

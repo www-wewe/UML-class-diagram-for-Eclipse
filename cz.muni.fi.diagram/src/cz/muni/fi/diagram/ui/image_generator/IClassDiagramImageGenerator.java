@@ -6,9 +6,9 @@ import org.eclipse.swt.graphics.Image;
 import cz.muni.fi.diagram.ui.view.ClassDiagram;
 
 /**
- * Interface for functionality of getting image from ClassDiagram
+ * Interface for functionality of getting image from ClassDiagram.
+ * 
  * @author Veronika Lenková
- *
  */
 public interface IClassDiagramImageGenerator {
 

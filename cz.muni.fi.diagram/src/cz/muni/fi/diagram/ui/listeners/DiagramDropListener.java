@@ -2,12 +2,14 @@
 package cz.muni.fi.diagram.ui.listeners;
 
 import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.ITypeHierarchy;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.DropTargetListener;
 
 import cz.muni.fi.diagram.model.ClassModel;
-import cz.muni.fi.diagram.parser.ClassModelParser;
 import cz.muni.fi.diagram.ui.view.ClassDiagramCanvas;
 
 /**
@@ -36,6 +38,23 @@ public class DiagramDropListener implements DropTargetListener {
 			    assert compilationUnit != null; // delete assert ?
 		        ClassModel classModel = ClassModel.create(compilationUnit);
 		        classDiagramCanvas.addClass(classModel);
+
+		        // add subclasses
+			    IType type = compilationUnit.findPrimaryType();
+			    if (type != null) {
+			    	ITypeHierarchy hierarchy;
+					try {
+						hierarchy = type.newTypeHierarchy(null);
+						IType[] subclasses = hierarchy.getSubclasses(type);
+						for (IType subclass : subclasses) {
+							ICompilationUnit subclassCompilationUnit = subclass.getCompilationUnit();
+							ClassModel subClassModel = ClassModel.create(subclassCompilationUnit);
+							classDiagramCanvas.addClass(subClassModel);
+						}
+					} catch (JavaModelException e) {
+						e.printStackTrace();
+					}
+			    }
 		    }
 		}
 	}

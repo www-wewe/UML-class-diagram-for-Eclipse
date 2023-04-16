@@ -10,12 +10,12 @@ import org.eclipse.swt.dnd.DropTarget;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.part.ViewPart;
 
 import cz.muni.fi.diagram.ui.listeners.DiagramDropListener;
 import cz.muni.fi.diagram.ui.toolbar.EraseDiagramAction;
 import cz.muni.fi.diagram.ui.toolbar.ExportAction;
+import cz.muni.fi.diagram.ui.toolbar.ManageDiagramAction;
 import cz.muni.fi.diagram.ui.toolbar.WorkspaceDiagramAction;
 
 /**
@@ -43,18 +43,14 @@ public class ClassDiagramView extends ViewPart {
         GridLayout layout = new GridLayout();
         mainComposite.setLayout(layout);
 
-        Label label = new Label (mainComposite, SWT.NONE);
-        label.setText("Drop a Java class to generate a class diagram.");
-        GridData labelGridData = new GridData();
-        label.setLayoutData(labelGridData);
-        labelGridData.exclude = false;
-        //label.setVisible(false);
-
         classDiagramCanvas = new ClassDiagramCanvas(mainComposite, classDiagram);
         GridData canvasGridData = new GridData();
         classDiagramCanvas.setLayoutData(canvasGridData);
-        canvasGridData.exclude = false;
+        canvasGridData.exclude = true;
 
+        System.out.print("TUUUU: ");
+        System.out.print(parent.getDisplay().getClientArea().height);
+        System.out.print(parent.getDisplay().getClientArea().width);
         scrolledComposite.setMinSize(400, 750);
         scrolledComposite.setSize(400, 750);
         mainComposite.setSize(400, 750);
@@ -64,12 +60,12 @@ public class ClassDiagramView extends ViewPart {
         dropTarget.setTransfer(LocalSelectionTransfer.getTransfer()); 
         dropTarget.addDropListener(new DiagramDropListener(classDiagramCanvas));
 
-
         IContributionManager toolBarManager = getViewSite().getActionBars().getToolBarManager();
         // TODO add icons
     	toolBarManager.add(new ExportAction(parent.getShell(), classDiagramCanvas));
-    	toolBarManager.add(new EraseDiagramAction(classDiagramCanvas));
     	toolBarManager.add(new WorkspaceDiagramAction(classDiagramCanvas));
+    	toolBarManager.add(new ManageDiagramAction(parent.getShell(), classDiagramCanvas));
+    	// toolBarManager.add(new EraseDiagramAction(classDiagramCanvas));
     }
 
 	@Override

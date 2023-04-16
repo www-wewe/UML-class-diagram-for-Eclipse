@@ -1,13 +1,15 @@
 /** Copyright (c) 2023, Veronika Lenková */
 package cz.muni.fi.diagram.model;
 
+import cz.muni.fi.diagram.parser.IPlantUMLString;
+
 /**
  * One parameter in method model.
  * 
  * @author Veronika Lenková
  */
 
-public class ParameterModel {
+public class ParameterModel implements IPlantUMLString {
     private String name;
     private String type;
 
@@ -33,6 +35,11 @@ public class ParameterModel {
 
 	@Override
 	public String toString() {
+		return getType() + " " + getName();
+	}
+
+	@Override
+	public String toPlantUMLString() {
 		return getType() + " " + getName();
 	}
 	

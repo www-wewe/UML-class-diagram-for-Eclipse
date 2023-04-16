@@ -2,6 +2,7 @@
 package cz.muni.fi.diagram.ui.view;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
@@ -23,6 +24,8 @@ public class ClassDiagramCanvas extends Canvas {
 	private Image image = null;
 	/** Image generator which can generate image from class diagram */
 	private IClassDiagramImageGenerator imageGenerator = new PlantUMLImageGenerator();
+	/** Text displayed in the canvas when the class diagram is empty */
+	private String text = "Drop a Java class here to generate a class diagram.";
 
 	/**
      * Creates a new class diagram canvas.
@@ -41,6 +44,7 @@ public class ClassDiagramCanvas extends Canvas {
      */
     public void setClassDiagram(ClassDiagram classDiagram) {
         this.classDiagram = classDiagram;
+        generateImage();
         redraw();
     }
 
@@ -69,9 +73,16 @@ public class ClassDiagramCanvas extends Canvas {
             int imgY = (canvasBounds.height - image.getBounds().height) / 2;
             gc.drawImage(image, imgX, imgY);
 
-            setSize(image.getBounds().width + 50, image.getBounds().height + 50);
-            getParent().setSize(image.getBounds().width + 100, image.getBounds().height + 50);
+            setSize(image.getBounds().width, image.getBounds().height);
+            getParent().setSize(image.getBounds().width, image.getBounds().height);
+            //getParent().getParent().setSize(image.getBounds().width + 100, image.getBounds().height + 50);
+            ((ScrolledComposite) getParent().getParent()).setMinSize(image.getBounds().width, image.getBounds().height);
         }
+    	else {
+    		gc.drawText(text, 5, 5, true);
+    		setSize(400, 750);
+            getParent().setSize(400, 750);
+    	}
     }
 
     /**
@@ -80,27 +91,41 @@ public class ClassDiagramCanvas extends Canvas {
      * @return true if class was added - false otherwise (class is already in diagram)
      */
 	public boolean addClass(ClassModel classModel) {
-        // add a new class to the diagram
+		if (classModel == null) {
+			return false;
+		}
 		if (classDiagram.addClass(classModel)) {
-			if (image != null) {
-				image.dispose();
-			}
-			image = imageGenerator.getImage(classDiagram);
+			generateImage();
 			redraw();
 			return true;
 		}
 		return false;
     }
 
+	/**
+	 * Generates image and stores it in {@code image}.
+	 */
+	private void generateImage() {
+		if (image != null) {
+			image.dispose();
+		}
+		image = imageGenerator.getImage(classDiagram);
+	}
+
+	/**
+	 * @return Image to be exported
+	 */
 	public Image getImageToExport() {
 		return imageGenerator.getImage(classDiagram);
 	}
 
+	/**
+	 * Clears the class diagram and generates new empty image that will be displayed.
+	 */
 	public void clear() {
 		getClassDiagram().clear();
+		generateImage();
 		redraw();
 	}
 
 }
-
-

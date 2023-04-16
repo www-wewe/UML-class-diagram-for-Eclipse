@@ -16,10 +16,17 @@ import cz.muni.fi.diagram.ui.view.ClassDiagramCanvas;
  * @author Veronika Lenková
  */
 public class ExportAction extends Action {
-	
-	ClassDiagramCanvas classDiagramCanvas;
+
+	/** Canvas with class diagram */
+	private ClassDiagramCanvas classDiagramCanvas;
+	/** Main window */
 	private final Shell shell;
-    
+
+	/**
+	 * Constructor.
+	 * @param shell
+	 * @param classDiagramCanvas
+	 */
     public ExportAction(Shell shell, ClassDiagramCanvas classDiagramCanvas) {
         setText("Export");
         setToolTipText("Export diagram");
@@ -37,11 +44,15 @@ public class ExportAction extends Action {
         String outputPath = openFileDialog();
         if (outputPath != null) {
             // Save the content of the canvas as a PNG file
-        	imageLoader.save(outputPath, SWT.IMAGE_PNG);
+        	imageLoader.save(outputPath, SWT.IMAGE_SVG);
         }
         image.dispose();
     }
 
+    /**
+     * Opens the dialog where outpath path is provided.
+     * @return choosen output path
+     */
     public String openFileDialog() {
         FileDialog fileDialog = new FileDialog(shell, SWT.SAVE);
         fileDialog.setFilterNames(new String[] { "PNG Images (*.png)", "All Files (*.*)" });

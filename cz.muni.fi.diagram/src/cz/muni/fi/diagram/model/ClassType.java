@@ -14,5 +14,5 @@ public enum ClassType {
 	ClassType(String character) {
 		this.character = character;
 	}
-	
+
 }

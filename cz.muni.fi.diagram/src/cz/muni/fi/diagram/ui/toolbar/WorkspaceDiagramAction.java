@@ -9,6 +9,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
+import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.ITypeHierarchy;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.action.Action;
@@ -40,7 +42,10 @@ public class WorkspaceDiagramAction extends Action {
 	
 	@Override
 	   public void run() {
-		    classDiagram = new ClassDiagram();
+			classDiagram = classDiagramCanvas.getClassDiagram();
+			if (classDiagram == null) {
+				classDiagram = new ClassDiagram();
+			}
 			createClassDiagramFromWorkspace();
 			classDiagramCanvas.setClassDiagram(classDiagram);
 	   }
@@ -77,7 +82,24 @@ public class WorkspaceDiagramAction extends Action {
 		for (ICompilationUnit unit : mypackage.getCompilationUnits()) {
 			// now create the AST for the ICompilationUnits
 			ClassModel classModel = ClassModelParser.createClassModel(unit);
-			classDiagram.addClass(classModel);
+		    classDiagram.addClass(classModel);
+
+		    // add subclasses
+		    IType type = unit.findPrimaryType();
+		    if (type != null) {
+		    	ITypeHierarchy hierarchy;
+				try {
+					hierarchy = type.newTypeHierarchy(null);
+					IType[] subclasses = hierarchy.getSubclasses(type);
+					for (IType subclass : subclasses) {
+						ICompilationUnit subclassCompilationUnit = subclass.getCompilationUnit();
+						ClassModel subClassModel = ClassModel.create(subclassCompilationUnit);
+						classDiagramCanvas.addClass(subClassModel);
+					}
+				} catch (JavaModelException e) {
+					e.printStackTrace();
+				}
+		    }
 		}
 	}
 

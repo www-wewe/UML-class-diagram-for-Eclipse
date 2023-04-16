@@ -5,9 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cz.muni.fi.diagram.model.ClassModel;
-import cz.muni.fi.diagram.model.FieldModel;
-import cz.muni.fi.diagram.model.MethodModel;
-import cz.muni.fi.diagram.model.Relationship;
 
 /**
  * Class representing class diagram.
@@ -16,31 +13,39 @@ import cz.muni.fi.diagram.model.Relationship;
  *
  */
 public class ClassDiagram {
+	/** Classes in class diagram */
     private List<ClassModel> classes;
-    // delete TODO
-    private List<Relationship> relationships;
-    private String packageName;
 
+	private int scaleWidth = -1;
+	private int scaleHeight = -1;
+    private boolean hideFields = false;
+    private boolean hideMethods = false;
+    private boolean hideInterface = false;
+    private boolean hideEnum = false;
+    private boolean hidePackage = true;
+
+	/**
+     * Constructor
+     */
     public ClassDiagram() {
         this.classes = new ArrayList<>();
-        this.relationships = new ArrayList<>();
     }
 
+    /**
+     * Removes all classes from the class diagram.
+     */
     public void clear() {
     	classes.clear();
-    	relationships.clear();
     }
 
-    public void setPackageName(String packageName) {
-        this.packageName = packageName;
-    }
-
-    public String getPackageName() {
-        return packageName;
-    }
-
+    /**
+     * Adds class model to the class diagram.
+     * If the class already exists in the class diagram, returns false, true otherwise.
+     * @param classModel one class
+     * @return true if the class is added false otherwise
+     */
     public boolean addClass(ClassModel classModel) {
-    	if (classModel.getName() == null) {
+    	if (classModel == null || classModel.getName() == null) {
 			return false;
 		}
 		if (getClasses().stream().noneMatch(x -> x.getName().equals(classModel.getName()))) {
@@ -50,20 +55,100 @@ public class ClassDiagram {
 		return false;        
     }
 
+    /**
+     * Removes class from class diagram.
+     * If the class diagram doesn't contain the class, returns false, true otherwise.
+     * @param classModel one class
+     * @return true if class is removed, false otherwise
+     */
+    public boolean removeClass(ClassModel classModel) {
+    	if (classModel == null || classModel.getName() == null) {
+			return false;
+		}
+		if (getClasses().stream().anyMatch(x -> x.getName().equals(classModel.getName()))) {
+			classes.remove(classModel);
+			return true;
+		}
+    	return false;
+    }
+
+    /**
+     * @return classes in class diagram
+     */
     public List<ClassModel> getClasses() {
-        return classes;
+        return new ArrayList<>(classes);
     }
 
-    public void addRelationship(Relationship relationship) {
-        relationships.add(relationship);
+    /**
+     * Sets classes of the class diagram.
+     * @param classes to be set
+     */
+    public void setClasses(List<ClassModel> classes) {
+        this.classes = classes;
     }
 
-    public List<Relationship> getRelationships() {
-        return relationships;
-    }
-
+    /**
+     * 
+     * @return true if the class diagram is empty, false otherwise
+     */
     public boolean isEmpty() {
 		return getClasses().isEmpty();
+	}
+
+    public int getScaleWidth() {
+		return scaleWidth;
+	}
+
+	public void setScaleWidth(int scale) {
+		this.scaleWidth = scale;
+	}
+
+	public int getScaleHeight() {
+		return scaleHeight;
+	}
+
+	public void setScaleHeight(int scale) {
+		this.scaleHeight = scale;
+	}
+
+	public boolean isHideFields() {
+		return hideFields;
+	}
+
+	public void setHideFields(boolean hideFields) {
+		this.hideFields = hideFields;
+	}
+
+	public boolean isHideMethods() {
+		return hideMethods;
+	}
+
+	public void setHideMethods(boolean hideMethods) {
+		this.hideMethods = hideMethods;
+	}
+
+	public boolean isHideInterface() {
+		return hideInterface;
+	}
+
+	public void setHideInterface(boolean hideInterface) {
+		this.hideInterface = hideInterface;
+	}
+
+	public boolean isHideEnum() {
+		return hideEnum;
+	}
+
+	public void setHideEnum(boolean hideEnum) {
+		this.hideEnum = hideEnum;
+	}
+
+    public boolean isHidePackage() {
+		return hidePackage;
+	}
+
+	public void setHidePackage(boolean hidePackage) {
+		this.hidePackage = hidePackage;
 	}
 
 }

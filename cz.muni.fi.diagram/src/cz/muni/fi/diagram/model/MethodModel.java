@@ -5,13 +5,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import cz.muni.fi.diagram.parser.IPlantUMLString;
+
 /**
  * Method in class model.
  * 
  * @author Veronika Lenková
  */
 
-public class MethodModel {
+public class MethodModel implements IPlantUMLString {
 
     private String name;
     private String returnType;
@@ -36,7 +38,7 @@ public class MethodModel {
         return parameters;
     }
 
-    public String getParametersToString() {
+    public String getParametersToPlantUMLString() {
     	return parameters.stream()
     		      .map(ParameterModel::toString)
     		      .collect(Collectors.joining(", ", "", ""));
@@ -85,7 +87,13 @@ public class MethodModel {
 	@Override
 	public String toString() {
 		return getVisibility().character + (isStatic() ? "{static} " : "") + (isAbstract() ? "{abstract} " : "") + 
-				getName() + "(" + getParametersToString() + ")" + (getReturnType() == null ? "" : " : " + getReturnType());
+				getName() + "(" + getParametersToPlantUMLString() + ")" + (getReturnType() == null ? "" : " : " + getReturnType());
+	}
+
+	@Override
+	public String toPlantUMLString() {
+		return getVisibility().character + (isStatic() ? "static " : "") + (isAbstract() ? "abstract " : "") + 
+				getName() + "(" + getParametersToPlantUMLString() + ")" + (getReturnType() == null ? "" : " : " + getReturnType());
 	}
 
 }

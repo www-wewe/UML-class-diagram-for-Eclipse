@@ -2,9 +2,6 @@
 package cz.muni.fi.diagram.ui.toolbar;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.resource.ImageDescriptor;
-
-import cz.muni.fi.diagram.ui.view.ClassDiagram;
 import cz.muni.fi.diagram.ui.view.ClassDiagramCanvas;
 
 /**
@@ -13,9 +10,14 @@ import cz.muni.fi.diagram.ui.view.ClassDiagramCanvas;
  * @author Veronika Lenková
  */
 public class EraseDiagramAction extends Action {
-	
-	ClassDiagramCanvas canvas;
-	
+
+	/** Canvas with class diagram */
+	private ClassDiagramCanvas canvas;
+
+	/**
+	 * Constructor.
+	 * @param canvas with class diagram
+	 */
 	public EraseDiagramAction(ClassDiagramCanvas canvas) {
         super("Erase");
         this.canvas = canvas;

@@ -2,11 +2,10 @@
 package cz.muni.fi.diagram.parser;
 
 import java.lang.reflect.Modifier;
-import org.eclipse.jdt.core.Flags;
-import org.eclipse.jdt.core.IType;
-import org.eclipse.jdt.core.dom.ASTNode;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.jdt.core.dom.ASTVisitor;
-import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.EnumConstantDeclaration;
 import org.eclipse.jdt.core.dom.EnumDeclaration;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
@@ -14,6 +13,8 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
+import org.eclipse.jdt.core.dom.AnonymousClassDeclaration;
 
 import cz.muni.fi.diagram.model.ClassModel;
 import cz.muni.fi.diagram.model.ClassType;
@@ -21,7 +22,6 @@ import cz.muni.fi.diagram.model.FieldModel;
 import cz.muni.fi.diagram.model.MethodModel;
 import cz.muni.fi.diagram.model.ParameterModel;
 import cz.muni.fi.diagram.model.Visibility;
-import cz.muni.fi.diagram.ui.view.ClassDiagram;
 
 /**
  * AST Visitor which visits CompilationUnit by {@code unit.accept(ASTVisitor)}
@@ -30,46 +30,53 @@ import cz.muni.fi.diagram.ui.view.ClassDiagram;
  * @author Veronika Lenková
  */
 public class ClassVisitor extends ASTVisitor {
-	ClassModel classModel = new ClassModel();
-	ClassDiagram classDiagram;
+
+	/** Class Models representing one java file in the workspace (can have nested classes) */
+	List<ClassModel> classModels = new ArrayList<>();
 
 	public ClassVisitor() {
 		// Intentionally empty
 	}
 
 	public ClassModel getClassModel() {
-		return classModel;
+		if (!classModels.isEmpty()) {
+			ClassModel classModel = classModels.get(0);
+			classModels.remove(0);
+			classModel.setNestedClasses(classModels);
+			return classModel;
+		}
+		return new ClassModel();
 	}
 
 	@Override
     public boolean visit(TypeDeclaration node) {
         // Create a new ClassModel object to represent the class
+		ClassModel classModel = new ClassModel();
 		classModel.setType(getClassType(node));
         String className = node.getName().getIdentifier();
         classModel.setName(className);
 
         // Set the superclass and interface information
         if (node.getSuperclassType() != null) {
-            classModel.setSuperClassName(node.getSuperclassType().toString());
+        	String superClassName = removeDisallowedChars(node.getSuperclassType().toString());
+            classModel.setSuperClassName(superClassName);
         }
         for (Object o : node.superInterfaceTypes()) {
             Type t = (Type) o;
-            classModel.addInterfaceName(t.toString());
+            String interfaceName = removeDisallowedChars(t.toString());
+            classModel.addInterface(interfaceName);
         }
-        
-        /* Set list of subclasses
-        for (TypeDeclaration type : node.getTypes()) {
-        	System.out.print("PREČO JE LIST EMPTY, KEĎ MA DETI? \n");
-            // Check if the type extends the superclass
-            if (type.getSuperclassType() != null && type.getSuperclassType().toString().equals(className)) {
-                // Add the subclass to a list
-                String subclass = type.getName().getFullyQualifiedName();
-                classModel.addSubclass(subclass);
-            }
-        }*/
-
+	    classModels.add(classModel);
         return true;
     }
+
+	private String removeDisallowedChars(String interfaceName) {
+		int indexGeneric = interfaceName.indexOf("<");
+		if (indexGeneric > 0) {
+			interfaceName = interfaceName.substring(0, indexGeneric);
+		}
+		return interfaceName;
+	}
 
 	private ClassType getClassType(TypeDeclaration node) {
 		int modifiers = node.getModifiers();
@@ -84,6 +91,9 @@ public class ClassVisitor extends ASTVisitor {
 	
     @Override
     public boolean visit(FieldDeclaration node) {
+    	ClassModel classModel = getCurrentClassModel(((AbstractTypeDeclaration)node.getParent())
+    			.getName().getIdentifier());
+    	assert(classModel != null);
         // Create a new FieldModel object to represent the field
         FieldModel fieldModel = new FieldModel();
         fieldModel.setName(node.fragments().get(0).toString());
@@ -104,14 +114,15 @@ public class ClassVisitor extends ASTVisitor {
         else {
         	fieldModel.setVisibility(Visibility.PACKAGE_PRIVATE);
         }
-        // Add the field model to the ClassModel
         classModel.addField(fieldModel);
-
         return true;
     }
 
     @Override
-    public boolean visit(MethodDeclaration node) {
+    public boolean visit(MethodDeclaration node) { //node.parent
+    	ClassModel classModel = getCurrentClassModel(((AbstractTypeDeclaration)node.getParent())
+    			.getName().getIdentifier());
+    	assert(classModel != null);
         // Create a new MethodModel object to represent the method
         MethodModel methodModel = new MethodModel();
         methodModel.setName(node.getName().getIdentifier());
@@ -144,15 +155,13 @@ public class ClassVisitor extends ASTVisitor {
             paramModel.setType(param.getType().toString());
             methodModel.addParameter(paramModel);
         }
-
-        // Add the method model to the ClassModel
         classModel.addMethod(methodModel);
-
-        return true;
+        return false;
     }
 
 	@Override
 	public boolean visit(EnumDeclaration node) {
+		ClassModel classModel = new ClassModel();
 		classModel.setType(ClassType.ENUM);
         String className = node.getName().getIdentifier();
         classModel.setName(className);
@@ -160,16 +169,22 @@ public class ClassVisitor extends ASTVisitor {
         // Set the superclass and interface information
         for (Object o : node.superInterfaceTypes()) {
             Type t = (Type) o;
-            classModel.addInterfaceName(t.toString());
+            String interfaceName = t.toString();
+            interfaceName = removeDisallowedChars(interfaceName);
+            classModel.addInterface(interfaceName);
         }
+        classModels.add(classModel);
 		return true;
 	}
 
 	@Override
 	public boolean visit(EnumConstantDeclaration node) {
+		ClassModel classModel = getCurrentClassModel(((AbstractTypeDeclaration)node.getParent())
+    			.getName().getIdentifier());
+		assert(classModel != null);
 		FieldModel fieldModel = new FieldModel();
-		fieldModel.setName(node.toString());
-		
+		fieldModel.setName(node.getName().getFullyQualifiedName());
+
 		int modifiers = node.getModifiers();
         fieldModel.setFinal(Modifier.isFinal(modifiers));
         fieldModel.setStatic(Modifier.isStatic(modifiers));
@@ -185,9 +200,28 @@ public class ClassVisitor extends ASTVisitor {
         else {
         	fieldModel.setVisibility(Visibility.PACKAGE_PRIVATE);
         }
-		// Add the field model to the ClassModel
         classModel.addField(fieldModel);
-        
 		return true;
 	}
+
+	@Override
+	public boolean visit(AnonymousClassDeclaration node) {
+		// skip the functions in function
+		return false;
+	}
+
+	/**
+	 * Gets the ClassModel for the current type (method/field)
+	 * @param className of model
+	 * @return class model with {@code className}
+	 */
+	private ClassModel getCurrentClassModel(String className) {
+		for (ClassModel classModel : classModels) {
+		    if (classModel.getName().equals(className)) {
+		        return classModel;
+		    }
+		}
+		assert(false); // unreachable
+        return null;
+    }
 }
