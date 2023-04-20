@@ -15,7 +15,6 @@ import org.eclipse.ui.part.ViewPart;
 import cz.muni.fi.diagram.ui.listeners.DiagramDropListener;
 import cz.muni.fi.diagram.ui.toolbar.ExportAction;
 import cz.muni.fi.diagram.ui.toolbar.ManageDiagramAction;
-import cz.muni.fi.diagram.ui.toolbar.WorkspaceDiagramAction;
 
 /**
  * View with canvas where class diagram is displayed.
@@ -59,7 +58,6 @@ public class ClassDiagramView extends ViewPart {
         IContributionManager toolBarManager = getViewSite().getActionBars().getToolBarManager();
         // TODO add icons
     	toolBarManager.add(new ExportAction(parent.getShell(), classDiagramCanvas));
-    	toolBarManager.add(new WorkspaceDiagramAction(classDiagramCanvas));
     	toolBarManager.add(new ManageDiagramAction(parent.getShell(), classDiagramCanvas));
     	// toolBarManager.add(new EraseDiagramAction(classDiagramCanvas));
     }

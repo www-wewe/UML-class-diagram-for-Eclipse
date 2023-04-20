@@ -59,7 +59,7 @@ public class ClassVisitor extends ASTVisitor {
         // Set the superclass and interface information
         if (node.getSuperclassType() != null) {
         	String superClassName = removeDisallowedChars(node.getSuperclassType().toString());
-            classModel.setSuperClassName(superClassName);
+            classModel.setParentName(superClassName);
         }
         for (Object o : node.superInterfaceTypes()) {
             Type t = (Type) o;

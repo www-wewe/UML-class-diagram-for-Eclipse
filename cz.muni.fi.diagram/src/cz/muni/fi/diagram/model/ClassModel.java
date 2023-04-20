@@ -14,14 +14,14 @@ import cz.muni.fi.diagram.parser.ClassModelParser;
  * @author Veronika Lenková
  */
 public class ClassModel {
-	ClassType type;
+	private ClassType type;
 	private String name;
 	private String packageName;
-	private String superClassName;
+	private String parentName;
     private List<FieldModel> fields = new ArrayList<>();
     private List<MethodModel> methods = new ArrayList<>();
     private List<ClassModel> nestedClasses = new ArrayList<>();
-    private List<String> subClasses = new ArrayList<>();
+    private List<String> children = new ArrayList<>();
     private List<String> interfaces = new ArrayList<>();
 
     public ClassModel() {
@@ -53,8 +53,8 @@ public class ClassModel {
 		this.name = name;
 	}
 
-	public void setSuperClassName(String name) {
-		this.superClassName = name;
+	public void setParentName(String name) {
+		this.parentName = name;
 	}
 
 	public void addInterface(String name) {
@@ -73,8 +73,8 @@ public class ClassModel {
         return fields;
     }
     
-    public String getSuperClassName() {
-		return superClassName;
+    public String getParentName() {
+		return parentName;
 	}
 
 	public List<MethodModel> getMethods() {
@@ -113,16 +113,16 @@ public class ClassModel {
 		this.packageName = packageName;
 	}
 
-	public List<String> getSubClasses() {
-		return subClasses;
+	public List<String> getChildren() {
+		return children;
 	}
 
-	public void setSubClasses(List<String> subClasses) {
-		this.subClasses = subClasses;
+	public void setChildren(List<String> children) {
+		this.children = children;
 	}
 
 	public void addSubClass(String classModel) {
-		this.subClasses.add(classModel);
+		this.children.add(classModel);
 	}
 
 	@Override

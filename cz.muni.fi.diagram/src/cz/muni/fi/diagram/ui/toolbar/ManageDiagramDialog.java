@@ -39,19 +39,26 @@ public class ManageDiagramDialog extends Dialog {
 	private List<ClassModel> classModels;
 	/** List viewer with class models */
     private ListViewer listViewer;
+
+    /** Button for hide fields */
+    private Button checkboxHideField;
+    /** Button for hide methods */
+    private Button checkboxHideMethod;
+    /** Button for hide interfaces */
+    private Button checkboxHideInterface;
+    /** Button for hide children */
+    private Button checkboxHideChildren;
+    /** Button for hide parents */
+    private Button checkboxHideParent;
+    /** Button for hide packages */
+    private Button checkboxHidePackage;
+    /** Button for hide packages */
+    private Button checkboxHideNestedClasses;
+
     /** Constant for default scale */
     private static final int DEFAULT_SCALE = -1;
-    Button checkboxHideField;
-    Button checkboxHideMethod;
-    // TODO
-    Button checkboxHideInterface;
-    // TODO
-    Button checkboxHideChildren;
-    // TODO
-    Button checkboxHideParent;
-    Button checkboxHidePackage;
-    Text scaleWidthText;
-    Text scaleHeightText;
+    private Text scaleWidthText;
+    private Text scaleHeightText;
 
     /**
      * Constructor.
@@ -112,6 +119,11 @@ public class ManageDiagramDialog extends Dialog {
         return dialog;
     }
 
+	/**
+	 * Adds checkboxes to dialog which set properties of class diagram.
+	 *
+	 * @param dialog
+	 */
 	private void addCheckboxes(Composite dialog) {
 		checkboxHideField = new Button(dialog, SWT.CHECK);
         checkboxHideField.setText("Hide fields");
@@ -121,21 +133,25 @@ public class ManageDiagramDialog extends Dialog {
         checkboxHideMethod.setText("Hide methods");
         checkboxHideMethod.setSelection(classDiagram.isHideMethods());
 
-        /*checkboxHideInterface = new Button(dialog, SWT.CHECK);
+        checkboxHideInterface = new Button(dialog, SWT.CHECK);
         checkboxHideInterface.setText("Hide interfaces");
         checkboxHideInterface.setSelection(classDiagram.isHideInterface());
 
         checkboxHideChildren = new Button(dialog, SWT.CHECK);
         checkboxHideChildren.setText("Hide children");
-        checkboxHideChildren.setSelection(classDiagram.isHideSubclass());
+        checkboxHideChildren.setSelection(classDiagram.isHideChildren());
         
         checkboxHideParent = new Button(dialog, SWT.CHECK);
         checkboxHideParent.setText("Hide parents");
-        checkboxHideParent.setSelection(classDiagram.isHideParent());*/
+        checkboxHideParent.setSelection(classDiagram.isHideParent());
 
         checkboxHidePackage = new Button(dialog, SWT.CHECK);
         checkboxHidePackage.setText("Hide packages");
         checkboxHidePackage.setSelection(classDiagram.isHidePackage());
+
+        checkboxHideNestedClasses= new Button(dialog, SWT.CHECK);
+        checkboxHideNestedClasses.setText("Hide nested classes");
+        checkboxHideNestedClasses.setSelection(classDiagram.isHideNestedClasses());
 
         Label width = new Label(dialog, SWT.NONE);
         width.setText("Scale width:");
@@ -158,10 +174,11 @@ public class ManageDiagramDialog extends Dialog {
 
     	classDiagram.setHideFields(checkboxHideField.getSelection());
     	classDiagram.setHideMethods(checkboxHideMethod.getSelection());
-    	//classDiagram.setHideInterface(checkboxHideInterface.getSelection());
-    	//classDiagram.setHideParent(checkboxHideParent.getSelection());
-    	//classDiagram.setHideChildren(checkboxHideChildren.getSelection());
+    	classDiagram.setHideInterface(checkboxHideInterface.getSelection());
+    	classDiagram.setHideParent(checkboxHideParent.getSelection());
+    	classDiagram.setHideChildren(checkboxHideChildren.getSelection());
     	classDiagram.setHidePackage(checkboxHidePackage.getSelection());
+    	classDiagram.setHideNestedClasses(checkboxHideNestedClasses.getSelection());
 
     	if (check(scaleHeightText)) {
     		classDiagram.setScaleHeight(Integer.parseInt(scaleHeightText.getText()));

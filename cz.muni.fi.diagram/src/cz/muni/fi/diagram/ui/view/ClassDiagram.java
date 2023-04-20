@@ -22,6 +22,9 @@ public class ClassDiagram {
     private boolean hideMethods = false;
     private boolean hideInterface = false;
     private boolean hideEnum = false;
+    private boolean hideParent = false;
+    private boolean hideChildren = false;
+    private boolean hideNestedClasses = false;
     private boolean hidePackage = true;
 
 	/**
@@ -142,7 +145,31 @@ public class ClassDiagram {
 		this.hideEnum = hideEnum;
 	}
 
-    public boolean isHidePackage() {
+    public boolean isHideParent() {
+		return hideParent;
+	}
+
+	public void setHideParent(boolean hideParent) {
+		this.hideParent = hideParent;
+	}
+
+	public boolean isHideChildren() {
+		return hideChildren;
+	}
+
+	public void setHideChildren(boolean hideChildren) {
+		this.hideChildren = hideChildren;
+	}
+
+	public boolean isHideNestedClasses() {
+		return hideNestedClasses;
+	}
+
+	public void setHideNestedClasses(boolean hideNestedClasses) {
+		this.hideNestedClasses = hideNestedClasses;
+	}
+
+	public boolean isHidePackage() {
 		return hidePackage;
 	}
 

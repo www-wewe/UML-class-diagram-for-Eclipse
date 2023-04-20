@@ -44,7 +44,7 @@ public class ExportAction extends Action {
         String outputPath = openFileDialog();
         if (outputPath != null) {
             // Save the content of the canvas as a PNG file
-        	imageLoader.save(outputPath, SWT.IMAGE_SVG);
+        	imageLoader.save(outputPath, SWT.IMAGE_PNG);
         }
         image.dispose();
     }

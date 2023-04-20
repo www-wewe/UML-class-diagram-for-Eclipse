@@ -1,10 +1,15 @@
 /** Copyright (c) 2023, Veronika Lenková */
 package cz.muni.fi.diagram.ui.listeners;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.ITypeHierarchy;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.internal.core.JavaProject;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.DropTargetListener;
@@ -34,31 +39,35 @@ public class DiagramDropListener implements DropTargetListener {
 	public void drop(DropTargetEvent event) {
 		if (event.data instanceof IStructuredSelection) {
 		    IStructuredSelection selection = (IStructuredSelection) event.data;
-		    ICompilationUnit compilationUnit = null;
 		    Object firstElement = selection.getFirstElement();
 		    if (firstElement instanceof ICompilationUnit) {
-		        // The dropped object is an ICompilationUnit
-		        compilationUnit = (ICompilationUnit) firstElement;
-			    assert compilationUnit != null; // delete assert ?
-		        ClassModel classModel = ClassModel.create(compilationUnit);
-		        classDiagramCanvas.addClass(classModel);
-
-		        // add subclasses
-			    IType type = compilationUnit.findPrimaryType();
-			    if (type != null) {
-			    	ITypeHierarchy hierarchy;
-					try {
-						hierarchy = type.newTypeHierarchy(null);
-						IType[] subclasses = hierarchy.getSubclasses(type);
-						for (IType subclass : subclasses) {
-							ICompilationUnit subclassCompilationUnit = subclass.getCompilationUnit();
-							ClassModel subClassModel = ClassModel.create(subclassCompilationUnit);
-							classDiagramCanvas.addClass(subClassModel);
-						}
-					} catch (JavaModelException e) {
-						e.printStackTrace();
+		        // The dropped object is an CompilationUnit
+		    	ICompilationUnit compilationUnit = (ICompilationUnit) firstElement;
+			    createClassDiagram(compilationUnit);
+		    } else if (firstElement instanceof IPackageFragment) {
+		    	// The dropped object is a Package
+		    	IPackageFragment mypackage = (IPackageFragment) firstElement;
+		    	try {
+					for (ICompilationUnit unit : mypackage.getCompilationUnits()) {
+						createClassDiagram(unit);
 					}
-			    }
+				} catch (JavaModelException e) {
+					e.printStackTrace();
+				}
+		    } else if (firstElement instanceof IJavaProject) {
+		    	// The dropped object is an JavaProject
+		    	IJavaProject project = (IJavaProject) firstElement;
+		    	IPackageFragment[] packages;
+				try {
+					packages = project.getPackageFragments();
+					for (IPackageFragment mypackage : packages) {
+						for (ICompilationUnit unit : mypackage.getCompilationUnits()) {
+							createClassDiagram(unit);
+						}
+					}
+				} catch (JavaModelException e) {
+					e.printStackTrace();
+				}
 		    }
 		}
 	}
@@ -88,4 +97,31 @@ public class DiagramDropListener implements DropTargetListener {
 		// Empty
 	}
 
+	/**
+	 * Creates class diagram by creating class models of compilation unit and its subclasses.
+	 * 
+	 * @param compilationUnit
+	 */
+	private void createClassDiagram(ICompilationUnit compilationUnit) {
+		assert compilationUnit != null; // delete assert ?
+		ClassModel classModel = ClassModel.create(compilationUnit);
+		classDiagramCanvas.addClass(classModel);
+
+		// add subclasses
+		IType type = compilationUnit.findPrimaryType();
+		if (type != null) {
+			ITypeHierarchy hierarchy;
+			try {
+				hierarchy = type.newTypeHierarchy(null);
+				IType[] subclasses = hierarchy.getSubclasses(type);
+				for (IType subclass : subclasses) {
+					ICompilationUnit subclassCompilationUnit = subclass.getCompilationUnit();
+					ClassModel subClassModel = ClassModel.create(subclassCompilationUnit);
+					classDiagramCanvas.addClass(subClassModel);
+				}
+			} catch (JavaModelException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 }

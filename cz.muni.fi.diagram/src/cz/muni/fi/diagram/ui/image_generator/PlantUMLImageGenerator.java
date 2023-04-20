@@ -9,6 +9,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 
 import cz.muni.fi.diagram.model.ClassModel;
+import cz.muni.fi.diagram.model.ClassType;
 import cz.muni.fi.diagram.model.FieldModel;
 import cz.muni.fi.diagram.model.MethodModel;
 import cz.muni.fi.diagram.ui.view.ClassDiagram;
@@ -77,17 +78,10 @@ public final class PlantUMLImageGenerator implements IClassDiagramImageGenerator
      * @return PlantUML text
      */
 	private String getPlantUMLSource(ClassDiagram classDiagram) {
-		boolean showPackage = !classDiagram.isHidePackage();
 		StringBuilder source = new StringBuilder(START_PLANT_UML);
 		StringBuilder relationshipsString = new StringBuilder();
 		for (ClassModel classModel : classDiagram.getClasses()) {
-			if (showPackage) {
-				source.append("package " + classModel.getPackageName() + " {" + NEWLINE);
-			}
 			addClassToPlantUML(source, relationshipsString, classModel);
-			if (showPackage) {				
-				source.append("}" + NEWLINE);
-			}
 		}
 		source.append(relationshipsString);
 		setSettings(source);
@@ -120,7 +114,17 @@ public final class PlantUMLImageGenerator implements IClassDiagramImageGenerator
 	 * @param relationshipsString string of relationships in the whole class diagram
 	 * @param classModel to be added to PlantUML source
 	 */
-	private static void addClassToPlantUML(StringBuilder source, StringBuilder relationshipsString, ClassModel classModel) {
+	private void addClassToPlantUML(StringBuilder source, StringBuilder relationshipsString, ClassModel classModel) {
+		boolean showPackage = !classDiagram.isHidePackage();
+		if (classDiagram.isHideInterface() && classModel.getType() == ClassType.INTERFACE) {
+			return;
+		}
+		if (classDiagram.isHideEnum() && classModel.getType() == ClassType.ENUM) {
+			return;
+		}
+		if (showPackage) {
+			source.append("package " + classModel.getPackageName() + " {" + NEWLINE);
+		}
 		StringBuilder oneClass =  new StringBuilder();
 		oneClass.append(classModel.getType().character).append(" ");
 		oneClass.append(classModel.getName()).append(" {" + NEWLINE);
@@ -131,17 +135,26 @@ public final class PlantUMLImageGenerator implements IClassDiagramImageGenerator
 			oneClass.append("{method}").append(methodModel.toPlantUMLString()).append(NEWLINE);
 		}
 		// Relationships
-		String superClass = classModel.getSuperClassName();
-		if (superClass != null) {
-			relationshipsString.append(classModel.getName()).append(" --|> ").append(superClass).append(NEWLINE);
+		if (!classDiagram.isHideParent()) {
+			String parent = classModel.getParentName();
+			if (parent != null) {
+				relationshipsString.append(classModel.getName()).append(" --|> ").append(parent).append(NEWLINE);
+			}
 		}
-		for (String interfaceClass : classModel.getInterfaces()) {
-			source.append("interface " + interfaceClass + NEWLINE);
-			relationshipsString.append(classModel.getName()).append(" ..|> ").append(interfaceClass).append(NEWLINE);
+		if (!classDiagram.isHideInterface()) {
+			for (String interfaceClass : classModel.getInterfaces()) {
+				source.append("interface " + interfaceClass + NEWLINE);
+				relationshipsString.append(classModel.getName()).append(" ..|> ").append(interfaceClass).append(NEWLINE);
+			}
 		}
-		for (ClassModel nestedClass : classModel.getNestedClasses()) {
-			relationshipsString.append(classModel.getName()).append(" +-- ").append(nestedClass.getName()).append(NEWLINE);
-			addClassToPlantUML(source, relationshipsString, nestedClass);
+		if (!classDiagram.isHideNestedClasses()) {
+			for (ClassModel nestedClass : classModel.getNestedClasses()) {
+				relationshipsString.append(classModel.getName()).append(" +-- ").append(nestedClass.getName()).append(NEWLINE);
+				addClassToPlantUML(source, relationshipsString, nestedClass);
+			}
+		}
+		if (showPackage) {
+			source.append("}" + NEWLINE);
 		}
 		oneClass.append("}" + NEWLINE);
 		source.append(oneClass);
