@@ -13,8 +13,25 @@ import cz.muni.fi.diagram.ui.view.ClassDiagram;
 public interface IClassDiagramImageGenerator {
 
 	/**
-	 * @param classDiagram
+	 * Gets new generated image from class diagram.
+	 * Image should be after using disposed.
+	 * 
 	 * @return Image of class diagram
 	 */
 	public Image getImage(ClassDiagram classDiagram);
+
+	/**
+	 * Gets the latest generated image.
+	 * Image should be after using disposed.
+	 * 
+	 * @return Image of class diagram
+	 */
+	public Image getImage();
+
+	/**
+	 * Sets scale of image. Used for zooming.
+	 * @param scale to be set
+	 */
+	public void setScale(double scale);
+
 }

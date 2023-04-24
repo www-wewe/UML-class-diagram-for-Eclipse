@@ -18,13 +18,21 @@ public class ClassDiagram {
 
 	private int scaleWidth = -1;
 	private int scaleHeight = -1;
+	/** Decides if the fields of the diagram should be hidden */
     private boolean hideFields = false;
+    /** Decides if the methods of the diagram should be hidden */
     private boolean hideMethods = false;
+    /** Decides if the interfaces should be hidden */
     private boolean hideInterface = false;
+    /** Decides if the enum classes should be hidden */
     private boolean hideEnum = false;
+    /** Decides if the parents should be hidden */
     private boolean hideParent = false;
+    /** Decides if the children should be hidden */
     private boolean hideChildren = false;
+    /** Decides if the nested classes should be hidden */
     private boolean hideNestedClasses = false;
+    /** Decides if the package name should be hidden */
     private boolean hidePackage = true;
 
 	/**

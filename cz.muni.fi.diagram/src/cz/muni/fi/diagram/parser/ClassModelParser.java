@@ -2,6 +2,7 @@
 package cz.muni.fi.diagram.parser;
 
 import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
@@ -29,7 +30,12 @@ public class ClassModelParser {
 		ClassVisitor visitor = new ClassVisitor();
 		parse.accept(visitor);
 		ClassModel classModel = visitor.getClassModel();
-		classModel.setPackageName(compilationUnit.getJavaProject().getElementName());
+		try {
+			classModel.setPackageName(compilationUnit.getPackageDeclarations()[0].getElementName());
+		} catch (JavaModelException e) {
+			classModel.setPackageName("unknown");
+			e.printStackTrace();
+		}
 		return classModel;
 	}
 

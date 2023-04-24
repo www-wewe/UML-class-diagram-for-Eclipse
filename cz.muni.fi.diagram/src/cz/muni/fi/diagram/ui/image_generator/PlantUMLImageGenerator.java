@@ -24,6 +24,7 @@ import net.sourceforge.plantuml.SourceStringReader;
  */
 public final class PlantUMLImageGenerator implements IClassDiagramImageGenerator {
 
+	/** Class diagram **/
 	private ClassDiagram classDiagram;
 	/** Constant indicating start of PlantUML code */
 	private static final String START_PLANT_UML = "@startuml\n";
@@ -31,18 +32,10 @@ public final class PlantUMLImageGenerator implements IClassDiagramImageGenerator
 	private static final String END_PLANT_UML = "@enduml\n";
 	/** Newline character */
 	private static final String NEWLINE = "\n";
-	/** Space character */
-	private static final String SPACE = " ";
-	/** Constant for scale */
-	private static final String SCALE = "scale";
-	/** Constant for width */
-	private static final String WIDTH = "width";
-	/** Constant for height */
-	private static final String HEIGHT = "height";
-	/** Constant for hide fields */
-	private static final String HIDE_FIELDS = "hide fields";
-	/** Constant for hide methods */
-	private static final String HIDE_METHODS = "hide methods";
+	/** Zoom scale */
+	private double scale = 1.0;
+	/** PlantUML source code from which is generated image */
+	private String diagramPlantUMLSource;
 
 	public PlantUMLImageGenerator() {
 		// Intentionally empty
@@ -54,21 +47,42 @@ public final class PlantUMLImageGenerator implements IClassDiagramImageGenerator
 		return generateImage(classDiagram);
 	}
 
+	@Override
+	public Image getImage() {
+		return generateImageFromSourceString(diagramPlantUMLSource);
+	}
+
 	/**
-	 * @param classDiagram
+	 * Generates image from class diagram.
+	 * New PlantUML source code is generated.
+	 * The developer is responsible for disposing the generated image.
+	 * 
+	 * @param classDiagram from which is generated image
+	 * @return generated Image
+	 */
+	public Image generateImage(ClassDiagram classDiagram) {
+		diagramPlantUMLSource = getPlantUMLSource(classDiagram);
+	    return generateImageFromSourceString(diagramPlantUMLSource);		
+	}
+
+	/**
+	 * Generates image from {@code plantUMLSource} code.
+	 * The developer is responsible for disposing the generated image.
+	 * 
+	 * @param plantUMLSource from which is generated image
 	 * @return generated Image
 	 */
 	@SuppressWarnings("deprecation")
-	public Image generateImage(ClassDiagram classDiagram) {
-		String diagramPlantUMLSource = getPlantUMLSource(classDiagram);
-	    SourceStringReader reader = new SourceStringReader(diagramPlantUMLSource);
+	private Image generateImageFromSourceString(String plantUMLSource) {
+		diagramPlantUMLSource = plantUMLSource;
+		SourceStringReader reader = new SourceStringReader(plantUMLSource);
 	    ByteArrayOutputStream out = new ByteArrayOutputStream();
 	    try {
 			reader.generateImage(out, new FileFormatOption(FileFormat.PNG));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	    return new Image(Display.getDefault(), new ByteArrayInputStream(out.toByteArray()));		
+	    return new Image(Display.getDefault(), new ByteArrayInputStream(out.toByteArray()));
 	}
 
     /**
@@ -79,32 +93,15 @@ public final class PlantUMLImageGenerator implements IClassDiagramImageGenerator
      */
 	private String getPlantUMLSource(ClassDiagram classDiagram) {
 		StringBuilder source = new StringBuilder(START_PLANT_UML);
+		source.append("scale " + scale + NEWLINE);
 		StringBuilder relationshipsString = new StringBuilder();
 		for (ClassModel classModel : classDiagram.getClasses()) {
 			addClassToPlantUML(source, relationshipsString, classModel);
 		}
 		source.append(relationshipsString);
-		setSettings(source);
 		source.append(END_PLANT_UML);
 //		System.out.print(source);
 		return source.toString();
-	}
-
-	private void setSettings(StringBuilder source) {
-		if (classDiagram.isHideFields()) {
-			source.append(HIDE_FIELDS + NEWLINE);
-		}
-		if (classDiagram.isHideMethods()) {
-			source.append(HIDE_METHODS + NEWLINE);
-		}
-		int scaleWidth = classDiagram.getScaleWidth();
-		if (scaleWidth != -1) {
-			source.append(SCALE + SPACE + scaleWidth + SPACE + WIDTH + NEWLINE);
-		}
-		int scaleHeight = classDiagram.getScaleHeight();
-		if (scaleHeight != -1) {
-			source.append(SCALE + SPACE + scaleHeight + SPACE + HEIGHT + NEWLINE);
-		}
 	}
 
 	/**
@@ -125,16 +122,32 @@ public final class PlantUMLImageGenerator implements IClassDiagramImageGenerator
 		if (showPackage) {
 			source.append("package " + classModel.getPackageName() + " {" + NEWLINE);
 		}
+
 		StringBuilder oneClass =  new StringBuilder();
 		oneClass.append(classModel.getType().character).append(" ");
 		oneClass.append(classModel.getName()).append(" {" + NEWLINE);
-		for (FieldModel fieldModel : classModel.getFields() ) {
-			oneClass.append("{field}").append(fieldModel.toPlantUMLString()).append(NEWLINE);
+		if (!classDiagram.isHideFields()) {
+			for (FieldModel fieldModel : classModel.getFields() ) {
+				oneClass.append("{field}").append(fieldModel.toPlantUMLString()).append(NEWLINE);
+			}
 		}
-		for (MethodModel methodModel : classModel.getMethods() ) {
-			oneClass.append("{method}").append(methodModel.toPlantUMLString()).append(NEWLINE);
+		if (!classDiagram.isHideMethods()) {
+			for (MethodModel methodModel : classModel.getMethods() ) {
+				oneClass.append("{method}").append(methodModel.toPlantUMLString()).append(NEWLINE);
+			}
 		}
-		// Relationships
+		addRelationships(source, relationshipsString, classModel);
+		oneClass.append("}" + NEWLINE);
+		source.append(showPackage ? oneClass + "}" + NEWLINE : source.append(oneClass));
+	}
+
+	/**
+	 * Adds relationships of class model to the source of PlantUML code.
+	 * @param source PlantUML code
+	 * @param relationshipsString
+	 * @param classModel one class
+	 */
+	private void addRelationships(StringBuilder source, StringBuilder relationshipsString, ClassModel classModel) {
 		if (!classDiagram.isHideParent()) {
 			String parent = classModel.getParentName();
 			if (parent != null) {
@@ -153,11 +166,30 @@ public final class PlantUMLImageGenerator implements IClassDiagramImageGenerator
 				addClassToPlantUML(source, relationshipsString, nestedClass);
 			}
 		}
-		if (showPackage) {
-			source.append("}" + NEWLINE);
-		}
-		oneClass.append("}" + NEWLINE);
-		source.append(oneClass);
 	}
 
+	public ClassDiagram getClassDiagram() {
+		return classDiagram;
+	}
+
+	public void setClassDiagram(ClassDiagram classDiagram) {
+		this.classDiagram = classDiagram;
+	}
+
+	public String getDiagramPlantUMLSource() {
+		return diagramPlantUMLSource;
+	}
+
+	public void setDiagramPlantUMLSource(String diagramPlantUMLSource) {
+		this.diagramPlantUMLSource = diagramPlantUMLSource;
+	}
+
+	public double getScale() {
+		return scale;
+	}
+
+	@Override
+	public void setScale(double scale) {
+		this.scale = scale;
+	}
 }

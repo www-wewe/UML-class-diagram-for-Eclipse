@@ -1,15 +1,12 @@
 /** Copyright (c) 2023, Veronika Lenková */
 package cz.muni.fi.diagram.ui.listeners;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.ITypeHierarchy;
-import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.internal.core.JavaProject;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.DropTargetListener;
@@ -107,13 +104,19 @@ public class DiagramDropListener implements DropTargetListener {
 		ClassModel classModel = ClassModel.create(compilationUnit);
 		classDiagramCanvas.addClass(classModel);
 
+		if (classDiagramCanvas.getClassDiagram().isHideChildren()) {
+			return;
+		}
 		// add subclasses
+		if (classDiagramCanvas.getClassDiagram().isHideChildren()) {
+			return;
+		}
 		IType type = compilationUnit.findPrimaryType();
 		if (type != null) {
 			ITypeHierarchy hierarchy;
 			try {
 				hierarchy = type.newTypeHierarchy(null);
-				IType[] subclasses = hierarchy.getSubclasses(type);
+				IType[] subclasses = hierarchy.getSubtypes(type);
 				for (IType subclass : subclasses) {
 					ICompilationUnit subclassCompilationUnit = subclass.getCompilationUnit();
 					ClassModel subClassModel = ClassModel.create(subclassCompilationUnit);

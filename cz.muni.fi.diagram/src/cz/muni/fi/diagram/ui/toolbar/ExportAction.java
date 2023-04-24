@@ -1,7 +1,11 @@
 /** Copyright (c) 2023, Veronika Lenková */
 package cz.muni.fi.diagram.ui.toolbar;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
@@ -30,6 +34,12 @@ public class ExportAction extends Action {
     public ExportAction(Shell shell, ClassDiagramCanvas classDiagramCanvas) {
         setText("Export");
         setToolTipText("Export diagram");
+        try {
+			setImageDescriptor(ImageDescriptor.createFromURL(
+					new URL("platform:/plugin/cz.muni.fi.diagram/icons/export.gif")));
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
         this.classDiagramCanvas = classDiagramCanvas;
         this.shell = shell;
     }

@@ -10,7 +10,9 @@ import cz.muni.fi.diagram.parser.IPlantUMLString;
  */
 
 public class ParameterModel implements IPlantUMLString {
+	/** Name of the parameter */
     private String name;
+    /** Type of the parameter */
     private String type;
 
     public ParameterModel() {

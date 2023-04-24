@@ -6,11 +6,15 @@
       <view
             category="cz.muni.fi.diagram.view"
             class="cz.muni.fi.diagram.ui.view.ClassDiagramView"
-            icon="icons/sample.png"
+            icon="icons/diagram.png"
             id="cz.muni.fi.diagram.view.ClassDiagramView"
-            name="ClassDiagram"
+            name="Class Diagram"
             restorable="true">
       </view>
+      <category
+            id="cz.muni.fi.diagram.view"
+            name="Class Diagram">
+      </category>
    </extension>
 
 </plugin>

@@ -38,6 +38,9 @@ public class ClassVisitor extends ASTVisitor {
 		// Intentionally empty
 	}
 
+	/**
+	 * @return created class model
+	 */
 	public ClassModel getClassModel() {
 		if (!classModels.isEmpty()) {
 			ClassModel classModel = classModels.get(0);
@@ -58,26 +61,35 @@ public class ClassVisitor extends ASTVisitor {
 
         // Set the superclass and interface information
         if (node.getSuperclassType() != null) {
-        	String superClassName = removeDisallowedChars(node.getSuperclassType().toString());
+        	String superClassName = reduceName(node.getSuperclassType().toString());
             classModel.setParentName(superClassName);
         }
         for (Object o : node.superInterfaceTypes()) {
             Type t = (Type) o;
-            String interfaceName = removeDisallowedChars(t.toString());
+            String interfaceName = reduceName(t.toString());
             classModel.addInterface(interfaceName);
         }
 	    classModels.add(classModel);
         return true;
     }
 
-	private String removeDisallowedChars(String interfaceName) {
-		int indexGeneric = interfaceName.indexOf("<");
+	/**
+	 * Reduces the name if it contains generic type.
+	 * @param name
+	 * @return new name
+	 */
+	private String reduceName(String name) {
+		int indexGeneric = name.indexOf("<");
 		if (indexGeneric > 0) {
-			interfaceName = interfaceName.substring(0, indexGeneric);
+			name = name.substring(0, indexGeneric);
 		}
-		return interfaceName;
+		return name;
 	}
 
+	/**
+	 * @param node - class
+	 * @return type of class
+	 */
 	private ClassType getClassType(TypeDeclaration node) {
 		int modifiers = node.getModifiers();
 		if (node.isInterface()) {
@@ -170,7 +182,7 @@ public class ClassVisitor extends ASTVisitor {
         for (Object o : node.superInterfaceTypes()) {
             Type t = (Type) o;
             String interfaceName = t.toString();
-            interfaceName = removeDisallowedChars(interfaceName);
+            interfaceName = reduceName(interfaceName);
             classModel.addInterface(interfaceName);
         }
         classModels.add(classModel);

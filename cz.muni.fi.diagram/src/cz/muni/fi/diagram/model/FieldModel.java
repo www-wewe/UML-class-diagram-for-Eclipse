@@ -10,10 +10,15 @@ import cz.muni.fi.diagram.parser.IPlantUMLString;
  */
 
 public class FieldModel implements IPlantUMLString {
+	/** Name of the field */
     private String name;
+    /** Type of the field */
     private String type;
+    /** Decides whether field is static */
 	private boolean isStatic = false;
+	/** Decides whether method is final */
     private boolean isFinal = false;
+    /** Visibility of the field */
     private Visibility visibility = Visibility.PACKAGE_PRIVATE;
 
     public FieldModel() {

@@ -1,6 +1,9 @@
 /** Copyright (c) 2023, Veronika Lenková */
 package cz.muni.fi.diagram.ui.view;
 
+import java.util.List;
+
+import org.eclipse.jface.action.IAction;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.graphics.GC;
@@ -26,6 +29,10 @@ public class ClassDiagramCanvas extends Canvas {
 	private IClassDiagramImageGenerator imageGenerator = new PlantUMLImageGenerator();
 	/** Text displayed in the canvas when the class diagram is empty */
 	private String text = "Drop a Java class here to generate a class diagram.";
+	/** Zoom scale */
+	private double scale = 1.0;
+	/** Toolbar actions whose visibility is changing according to content of canvas */
+	private List<IAction> toolbarActions;
 
 	/**
      * Creates a new class diagram canvas.
@@ -61,31 +68,25 @@ public class ClassDiagramCanvas extends Canvas {
      * @param gc class which draws image
      */
     public void draw(GC gc) {
-    	// set white background
-		/*Rectangle clientArea = getParent().getClientArea(); // mainComposite
-		Color white = getParent().getDisplay().getSystemColor(SWT.COLOR_WHITE);
-		gc.setBackground(white);
-		gc.fillRectangle(clientArea);*/
-
     	if (!classDiagram.isEmpty()) {
     		Rectangle canvasBounds = getBounds();
-            int imgX = (canvasBounds.width - image.getBounds().width) / 2;
-            int imgY = (canvasBounds.height - image.getBounds().height) / 2;
-            gc.drawImage(image, imgX, imgY);
-
-            setSize(image.getBounds().width, image.getBounds().height);
-            getParent().setSize(image.getBounds().width, image.getBounds().height);
-            //getParent().getParent().setSize(image.getBounds().width + 100, image.getBounds().height + 50);
-            ((ScrolledComposite) getParent().getParent()).setMinSize(image.getBounds().width, image.getBounds().height);
+    		int imgX = (canvasBounds.width - image.getBounds().width) / 2;
+    		int imgY = (canvasBounds.height - image.getBounds().height) / 2;
+    		gc.drawImage(image, imgX, imgY);
+    		setSize(image.getBounds().width, image.getBounds().height);
+    		getParent().setSize(image.getBounds().width, image.getBounds().height);
+    		((ScrolledComposite) getParent().getParent()).setMinSize(image.getBounds().width, image.getBounds().height);
+    		setEnabledActions(true);
         }
     	else {
     		gc.drawText(text, 5, 5, true);
-    		setSize(400, 750);
-            getParent().setSize(400, 750);
+    		setSize(400, 650);
+            getParent().setSize(400, 650);
+            setEnabledActions(false);
     	}
     }
 
-    /**
+	/**
      * Adds classModel representing one class to class diagram.
      * 
      * @param classModel
@@ -117,7 +118,7 @@ public class ClassDiagramCanvas extends Canvas {
 	 * @return Image to be exported
 	 */
 	public Image getImageToExport() {
-		return imageGenerator.getImage(classDiagram);
+		return imageGenerator.getImage();
 	}
 
 	/**
@@ -127,6 +128,34 @@ public class ClassDiagramCanvas extends Canvas {
 		getClassDiagram().clear();
 		generateImage();
 		redraw();
+	}
+
+	public void zoomIn() {
+		scale += 0.1;
+		imageGenerator.setScale(scale);
+		generateImage();
+		redraw();
+	}
+
+	public void zoomOut() {
+		scale -= 0.1;
+		imageGenerator.setScale(scale);
+		generateImage();
+		redraw();
+	}
+
+	public void addToolbarActions(List<IAction> toolbarActions) {
+		this.toolbarActions = toolbarActions;
+	}
+
+	/**
+	 * Sets visibility of toolbar actions.
+	 * @param enabled
+	 */
+    private void setEnabledActions(boolean enabled) {
+		for (IAction action : toolbarActions) {
+			action.setEnabled(enabled);
+		}
 	}
 
 }

@@ -15,11 +15,16 @@ import cz.muni.fi.diagram.parser.IPlantUMLString;
 
 public class MethodModel implements IPlantUMLString {
 
+	/** Name of the method */
     private String name;
+    /** Return type of the method */
     private String returnType;
     private List<ParameterModel> parameters = new ArrayList<>();
+    /** Decides whether method is static */
 	private boolean isStatic = false;
+	/** Decides whether method is abstract */
     private boolean isAbstract = false;
+    /** Visibility of the method */
     private Visibility visibility = Visibility.PUBLIC;
 
     public MethodModel() {
@@ -86,13 +91,13 @@ public class MethodModel implements IPlantUMLString {
 
 	@Override
 	public String toString() {
-		return getVisibility().character + (isStatic() ? "{static} " : "") + (isAbstract() ? "{abstract} " : "") + 
+		return getVisibility().character + (isStatic() ? "static " : "") + (isAbstract() ? "abstract " : "") + 
 				getName() + "(" + getParametersToPlantUMLString() + ")" + (getReturnType() == null ? "" : " : " + getReturnType());
 	}
 
 	@Override
 	public String toPlantUMLString() {
-		return getVisibility().character + (isStatic() ? "static " : "") + (isAbstract() ? "abstract " : "") + 
+		return getVisibility().character + (isStatic() ? "{static} " : "") + (isAbstract() ? "{abstract} " : "") + 
 				getName() + "(" + getParametersToPlantUMLString() + ")" + (getReturnType() == null ? "" : " : " + getReturnType());
 	}
 

@@ -1,21 +1,24 @@
 /** Copyright (c) 2023, Veronika Lenková */
 package cz.muni.fi.diagram.ui.toolbar;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 
@@ -55,10 +58,14 @@ public class ManageDiagramDialog extends Dialog {
     /** Button for hide packages */
     private Button checkboxHideNestedClasses;
 
-    /** Constant for default scale */
-    private static final int DEFAULT_SCALE = -1;
-    private Text scaleWidthText;
-    private Text scaleHeightText;
+	/** Button for removing all classes */
+	private Button removeAllButton;
+	/** Button for removing one class */
+	private Button removeButton;
+	/** Button for moving a function up */
+	private Button upButton;
+	/** Button for moving a function down */
+	private Button downButton;
 
     /**
      * Constructor.
@@ -79,16 +86,183 @@ public class ManageDiagramDialog extends Dialog {
     protected Control createDialogArea(Composite parent) {
         Composite dialog = (Composite) super.createDialogArea(parent);
         dialog.setLayout(new GridLayout(1, false));
+        try {
+			createHeaderComposite(dialog);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+        addListViewer(dialog);
+        addCheckboxes(dialog);
+        return dialog;
+    }
+
+	/**
+	 * Add list viewer with classes of diagram.
+	 * @param dialog - parent composite
+	 */
+	private void addListViewer(Composite dialog) {
+//		ScrolledComposite scrolledComposite = new ScrolledComposite(dialog, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+//		
+//		Composite listComposite = new Composite(scrolledComposite, SWT.NONE);
+//		listComposite.setLayout(new GridLayout(1, false));
 
         listViewer = new ListViewer(dialog, SWT.BORDER | SWT.V_SCROLL);
         listViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         listViewer.setContentProvider(ArrayContentProvider.getInstance());
         listViewer.setInput(classModels);
 
-        Button deleteButton = new Button(dialog, SWT.PUSH);
-        deleteButton.setText("Delete");
-        deleteButton.setEnabled(false);
-        deleteButton.addSelectionListener(new SelectionAdapter() {
+//        scrolledComposite.setContent(listComposite);
+//        scrolledComposite.setSize(150, 150);
+//        scrolledComposite.setMinSize(150, 150);
+        addListViewerListener();
+	}
+
+	/**
+	 * Adds listener to list viewer.
+	 */
+	private void addListViewerListener() {
+		listViewer.addSelectionChangedListener(event-> {
+        	IStructuredSelection selection = listViewer.getStructuredSelection();
+        	removeButton.setEnabled(!selection.isEmpty());
+        	removeAllButton.setEnabled(!classModels.isEmpty());
+        	if (!selection.isEmpty()) {
+                ClassModel selectedModel = (ClassModel) selection.getFirstElement();
+                int index = classModels.indexOf(selectedModel);
+                upButton.setEnabled(index >= 1);
+                downButton.setEnabled(index + 1 < classModels.size());
+            }
+        	else {
+        		upButton.setEnabled(false);
+        		downButton.setEnabled(false);
+        	}
+        });
+	}
+
+	/**
+	 * Create header composite with buttons for table.
+	 * @param dialog parent composite
+	 * @return newly created composite for a table
+	 * @throws MalformedURLException - if the images for the buttons were not created
+	 */
+	private Composite createHeaderComposite(Composite dialog) throws MalformedURLException {
+		Composite headerComposite = new Composite(dialog, SWT.NONE);
+		GridLayout gridLayout = new GridLayout(4, false);
+		gridLayout.marginHeight = 0;
+		gridLayout.marginLeft = 0;
+		gridLayout.marginRight = 0;
+		headerComposite.setLayout(gridLayout);
+		GridData headerContainerLayoutData = new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1);
+		headerComposite.setLayoutData(headerContainerLayoutData);
+		// create header buttons (right part of the header)
+		createHeaderButtons(headerComposite);
+		return headerComposite;
+	}
+
+	/**
+	 * Create composite for buttons in a header.
+	 * @param headerComposite parent composite
+	 * @return newly created composite for buttons in a header
+	 * @throws MalformedURLException - if the images for the buttons were not created
+	 */
+	private void createHeaderButtons(Composite headerComposite) throws MalformedURLException {
+		// create composite and layouts
+		Composite headerButtonsContainer = createHeaderButtonsComposite(headerComposite);
+		// add buttons with listener
+		addRemoveButton(headerButtonsContainer);
+        addRemoveAllButton(headerButtonsContainer);
+        addUpButton(headerButtonsContainer);
+        addDownButton(headerButtonsContainer);
+	}
+
+	/**
+	 * Add move down button.
+	 * @param headerButtonsContainer - parent composite
+	 * @throws MalformedURLException - if the images for the buttons were not created
+	 */
+	private void addDownButton(Composite headerButtonsContainer) throws MalformedURLException {
+		downButton = new Button(headerButtonsContainer, SWT.PUSH);
+        downButton.setToolTipText("Move the selected class down");
+        downButton.setEnabled(false);
+        Image downImg = ImageDescriptor.createFromURL(
+        		new URL("platform:/plugin/cz.muni.fi.diagram/icons/down.gif")).createImage();
+        downButton.setImage(downImg);
+        downButton.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+            	IStructuredSelection selection = listViewer.getStructuredSelection();
+                if (!selection.isEmpty()) {
+                    ClassModel selectedModel = (ClassModel) selection.getFirstElement();
+                    int index = classModels.indexOf(selectedModel);
+                    Collections.swap(classModels, index, index + 1);
+                    listViewer.setInput(classModels);
+                    listViewer.setSelection(selection);
+                }
+            }
+        });
+	}
+
+	/**
+	 * Add move up button.
+	 * @param headerButtonsContainer - parent composite
+	 * @throws MalformedURLException - if the images for the buttons were not created
+	 */
+	private void addUpButton(Composite headerButtonsContainer) throws MalformedURLException {
+		upButton = new Button(headerButtonsContainer, SWT.PUSH);
+        upButton.setToolTipText("Move the selected class up");
+        upButton.setEnabled(false);
+        Image upImg = ImageDescriptor.createFromURL(
+        		new URL("platform:/plugin/cz.muni.fi.diagram/icons/up.png")).createImage();
+        upButton.setImage(upImg);
+        upButton.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+            	IStructuredSelection selection = listViewer.getStructuredSelection();
+                if (!selection.isEmpty()) {
+                    ClassModel selectedModel = (ClassModel) selection.getFirstElement();
+                    int index = classModels.indexOf(selectedModel);
+                    Collections.swap(classModels, index, index - 1);
+                    listViewer.setInput(classModels);
+                    listViewer.setSelection(selection);
+                }
+            }
+        });
+	}
+
+	/**
+	 * Add remove all classes button.
+	 * @param headerButtonsContainer - parent composite
+	 * @throws MalformedURLException - if the images for the buttons were not created
+	 */
+	private void addRemoveAllButton(Composite headerButtonsContainer) throws MalformedURLException {
+		removeAllButton = new Button(headerButtonsContainer, SWT.PUSH);
+        removeAllButton.setToolTipText("Remove all classes");
+        removeAllButton.setEnabled(!classModels.isEmpty());
+        Image removeAllImg = ImageDescriptor.createFromURL(
+        		new URL("platform:/plugin/cz.muni.fi.diagram/icons/removeAll.png")).createImage();
+        removeAllButton.setImage(removeAllImg);
+        removeAllButton.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                classModels.clear();
+                listViewer.setInput(classModels);
+                removeAllButton.setEnabled(false);
+            }
+        });
+	}
+
+	/**
+	 * Add remove button.
+	 * @param headerButtonsContainer - parent composite
+	 * @throws MalformedURLException - if the images for the buttons were not created
+	 */
+	private void addRemoveButton(Composite headerButtonsContainer) throws MalformedURLException {
+		removeButton = new Button(headerButtonsContainer, SWT.PUSH);
+        removeButton.setToolTipText("Remove selected class");
+        Image addImg = ImageDescriptor.createFromURL(
+        		new URL("platform:/plugin/cz.muni.fi.diagram/icons/remove.png")).createImage();
+        removeButton.setImage(addImg);
+        removeButton.setEnabled(false);
+        removeButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 IStructuredSelection selection = listViewer.getStructuredSelection();
@@ -96,32 +270,29 @@ public class ManageDiagramDialog extends Dialog {
                     ClassModel selectedModel = (ClassModel) selection.getFirstElement();
                     classModels.remove(selectedModel);
                     listViewer.setInput(classModels);
-                    deleteButton.setEnabled(!listViewer.getStructuredSelection().isEmpty());
+                    removeButton.setEnabled(false);
                 }
             }
         });
-        Button removeAll = new Button(dialog, SWT.PUSH);
-        removeAll.setText("Delete All");
-        removeAll.setEnabled(!classModels.isEmpty());
-        removeAll.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                classModels.clear();
-                listViewer.setInput(classModels);
-            }
-        });
-
-        addCheckboxes(dialog);
-        listViewer.addSelectionChangedListener(event-> {
-        	deleteButton.setEnabled(!listViewer.getStructuredSelection().isEmpty());
-        	removeAll.setEnabled(!listViewer.getStructuredSelection().isEmpty());
-        });
-        return dialog;
-    }
+	}
 
 	/**
-	 * Adds checkboxes to dialog which set properties of class diagram.
-	 *
+	 * Create composite for buttons in a header.
+	 * @param headerComposite parent composite
+	 * @return newly created composite for buttons in a header
+	 */
+	private Composite createHeaderButtonsComposite(Composite headerComposite) {
+		Composite headerButtonsContainer = new Composite(headerComposite, SWT.NONE);
+		GridLayout headerButtonsContainerLayout = new GridLayout(5, false);
+		headerButtonsContainerLayout.horizontalSpacing = 2;
+		headerButtonsContainer.setLayout(headerButtonsContainerLayout);
+		GridData headerButtonsContainerGridData = new GridData(SWT.CENTER, SWT.CENTER, false, false);
+		headerButtonsContainer.setLayoutData(headerButtonsContainerGridData);
+		return headerButtonsContainer;
+	}
+
+	/**
+	 * Adds checkboxes to dialog that set properties of class diagram.
 	 * @param dialog
 	 */
 	private void addCheckboxes(Composite dialog) {
@@ -152,20 +323,6 @@ public class ManageDiagramDialog extends Dialog {
         checkboxHideNestedClasses= new Button(dialog, SWT.CHECK);
         checkboxHideNestedClasses.setText("Hide nested classes");
         checkboxHideNestedClasses.setSelection(classDiagram.isHideNestedClasses());
-
-        Label width = new Label(dialog, SWT.NONE);
-        width.setText("Scale width:");
-        scaleWidthText = new Text(dialog, SWT.BORDER);
-        if (classDiagram.getScaleWidth() != DEFAULT_SCALE) {        	
-        	scaleWidthText.setText(String.valueOf(classDiagram.getScaleWidth()));
-        }
-
-        Label height = new Label(dialog, SWT.NONE);
-        height.setText("Scale height:");
-        scaleHeightText = new Text(dialog, SWT.BORDER);
-        if (classDiagram.getScaleHeight() != DEFAULT_SCALE) {        	
-        	scaleHeightText.setText(String.valueOf(classDiagram.getScaleHeight()));
-        }
 	}
 
     @Override
@@ -180,41 +337,38 @@ public class ManageDiagramDialog extends Dialog {
     	classDiagram.setHidePackage(checkboxHidePackage.getSelection());
     	classDiagram.setHideNestedClasses(checkboxHideNestedClasses.getSelection());
 
-    	if (check(scaleHeightText)) {
-    		classDiagram.setScaleHeight(Integer.parseInt(scaleHeightText.getText()));
-    	} else {
-    		classDiagram.setScaleHeight(DEFAULT_SCALE);
-    	}
-    	if (check(scaleWidthText)) {
-    		classDiagram.setScaleWidth(Integer.parseInt(scaleWidthText.getText()));
-    	} else {
-    		classDiagram.setScaleWidth(DEFAULT_SCALE);
-    	}
-    	
     	classDiagramCanvas.setClassDiagram(classDiagram);
+    	classDiagramCanvas.redraw();
+    	disposeImages();
     	super.okPressed();
     }
 
     /**
-     * Checks the value provided by user.
-     * @param scale have to be number
-     * @return true if scale is real
+     * Disposes buttons images.
      */
-    private boolean check(Text scale) {
-    	int scaleNumber;
-    	try {    		
-    		scaleNumber = Integer.parseInt(scale.getText());
-    	}
-    	catch (NumberFormatException e) {
-    		return false;
-    	}
-    	return scaleNumber > 100;
-	}
+    private void disposeImages() {
+    	removeButton.getImage().dispose();
+    	removeAllButton.getImage().dispose();
+    	upButton.getImage().dispose();
+    	downButton.getImage().dispose();
+    }
 
 	@Override
     protected void configureShell(Shell newShell) {
         super.configureShell(newShell);
         newShell.setText("Manage Classes Dialog");
+    }
+
+    @Override
+    protected void cancelPressed() {
+    	disposeImages();
+    	super.cancelPressed();
+    }
+
+    @Override
+    public boolean close() {
+    	disposeImages();
+    	return super.close();
     }
 
 }

@@ -14,14 +14,23 @@ import cz.muni.fi.diagram.parser.ClassModelParser;
  * @author Veronika Lenková
  */
 public class ClassModel {
+	/** One of: class, interface, enum, abstract class */
 	private ClassType type;
+	/** Name of the class */
 	private String name;
+	/** Name of the package */
 	private String packageName;
+	/** Name of the parent */
 	private String parentName;
+	/** Fields in the class */
     private List<FieldModel> fields = new ArrayList<>();
+    /** Methods in the class */
     private List<MethodModel> methods = new ArrayList<>();
+    /** Nested classes */
     private List<ClassModel> nestedClasses = new ArrayList<>();
+    /** Children of the class */
     private List<String> children = new ArrayList<>();
+    /** Interfaces of the class */
     private List<String> interfaces = new ArrayList<>();
 
     public ClassModel() {
