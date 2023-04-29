@@ -7,7 +7,7 @@ Use the Eclipse update manager via *Help -> Install New Software...* to install 
 Use the update manager to point to your local directory with **plugin.zip**. Then select and install the Class Diagram feature.
 
 # License
-This plugin uses [BSD 3-clause license](https://opensource.org/license/bsd-3-clause/).
+This plugin uses [BSD 3-clause License](https://opensource.org/license/bsd-3-clause/).
 
 # Notes
 There might be some issues with generating the class diagram from big amount of classes.
