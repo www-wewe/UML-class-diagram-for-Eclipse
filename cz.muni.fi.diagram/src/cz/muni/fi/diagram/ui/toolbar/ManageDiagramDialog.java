@@ -160,7 +160,6 @@ public class ManageDiagramDialog extends Dialog {
 	/**
 	 * Create composite for buttons in a header.
 	 * @param headerComposite parent composite
-	 * @return newly created composite for buttons in a header
 	 * @throws MalformedURLException - if the images for the buttons were not created
 	 */
 	private void createHeaderButtons(Composite headerComposite) throws MalformedURLException {
@@ -292,7 +291,7 @@ public class ManageDiagramDialog extends Dialog {
 
 	/**
 	 * Adds checkboxes to dialog that set properties of class diagram.
-	 * @param dialog
+	 * @param dialog - manage dialog
 	 */
 	private void addCheckboxes(Composite dialog) {
 		checkboxHideField = new Button(dialog, SWT.CHECK);

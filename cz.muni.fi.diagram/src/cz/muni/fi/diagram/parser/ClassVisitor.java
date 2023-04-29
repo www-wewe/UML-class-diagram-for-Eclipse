@@ -76,7 +76,7 @@ public class ClassVisitor extends ASTVisitor {
 
 	/**
 	 * Reduces the name if it contains generic type.
-	 * @param name
+	 * @param name original
 	 * @return new name
 	 */
 	private String reduceName(String name) {
@@ -219,8 +219,8 @@ public class ClassVisitor extends ASTVisitor {
 
 	/**
 	 * Gets the ClassModel for the current type (method/field)
-	 * @param className of model
-	 * @return class model with {@code className}
+	 * @param node representing field or method
+	 * @return parent of node
 	 */
 	private ClassModel getCurrentClassModel(BodyDeclaration node) {
 		String className = ((AbstractTypeDeclaration)node.getParent())

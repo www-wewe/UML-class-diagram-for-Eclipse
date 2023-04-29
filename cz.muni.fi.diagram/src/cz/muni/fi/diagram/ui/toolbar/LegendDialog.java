@@ -24,8 +24,8 @@ class LegendDialog extends Dialog {
 
     /**
      * Constructor.
-     * @param parentShell - main window
-     * @param image
+     * @param shell - main window
+     * @param image of legend
      */
     public LegendDialog(Shell shell, Image image) {
         super(shell);

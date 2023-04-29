@@ -97,7 +97,7 @@ public class DiagramDropListener implements DropTargetListener {
 	/**
 	 * Creates class diagram by creating class models of compilation unit and its subclasses.
 	 * 
-	 * @param compilationUnit
+	 * @param compilationUnit from which is diagram created
 	 */
 	private void createClassDiagram(ICompilationUnit compilationUnit) {
 		assert compilationUnit != null; // delete assert ?

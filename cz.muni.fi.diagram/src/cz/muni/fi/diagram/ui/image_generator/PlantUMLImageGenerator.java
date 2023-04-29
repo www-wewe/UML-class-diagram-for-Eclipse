@@ -96,8 +96,9 @@ public final class PlantUMLImageGenerator implements IClassDiagramImageGenerator
 
     /**
      * Gets PlantUML source code which will be used for generating image from it.
-     * See {@link https://plantuml.com/class-diagram} for more about PlantUML class diagram syntax.
+     * See https://plantuml.com/class-diagram for more about PlantUML class diagram syntax.
      * 
+     * @param classDiagram from which is PlantUML text generated
      * @return PlantUML text
      */
 	private String getPlantUMLSource(ClassDiagram classDiagram) {
@@ -109,7 +110,6 @@ public final class PlantUMLImageGenerator implements IClassDiagramImageGenerator
 		}
 		source.append(relationshipsString);
 		source.append(END_PLANT_UML);
-//		System.out.print(source);
 		return source.toString();
 	}
 
@@ -153,7 +153,7 @@ public final class PlantUMLImageGenerator implements IClassDiagramImageGenerator
 	/**
 	 * Adds relationships of class model to the source of PlantUML code.
 	 * @param source PlantUML code
-	 * @param relationshipsString
+	 * @param relationshipsString - string with relationships
 	 * @param classModel one class
 	 */
 	private void addRelationships(StringBuilder source, StringBuilder relationshipsString, ClassModel classModel) {

@@ -16,6 +16,7 @@ public interface IClassDiagramImageGenerator {
 	 * Gets new generated image from class diagram.
 	 * Image should be after using disposed.
 	 * 
+	 * @param classDiagram from which is image generated
 	 * @return Image of class diagram
 	 */
 	public Image getImage(ClassDiagram classDiagram);

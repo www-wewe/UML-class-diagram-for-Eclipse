@@ -73,7 +73,7 @@ public class ClassDiagramCanvas extends Canvas {
 	/**
      * Adds classModel representing one class to class diagram.
      * 
-     * @param classModel
+     * @param classModel to be added
      * @return true if class was added - false otherwise (class is already in diagram)
      */
 	public boolean addClass(ClassModel classModel) {
@@ -136,7 +136,7 @@ public class ClassDiagramCanvas extends Canvas {
 
 	/**
 	 * Sets visibility of toolbar actions.
-	 * @param enabled
+	 * @param enabled - visibility
 	 */
     private void setEnabledActions(boolean enabled) {
 		for (IAction action : toolbarActions) {
@@ -162,7 +162,7 @@ public class ClassDiagramCanvas extends Canvas {
 
 	/**
 	 * Adds toolbar actions.
-	 * @param toolbarActions
+	 * @param toolbarActions to be added
 	 */
 	public void addToolbarActions(List<IAction> toolbarActions) {
 		this.toolbarActions = toolbarActions;

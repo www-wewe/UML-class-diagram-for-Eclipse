@@ -28,8 +28,8 @@ public class ExportAction extends Action {
 
 	/**
 	 * Constructor.
-	 * @param shell
-	 * @param classDiagramCanvas
+	 * @param shell - main window
+	 * @param classDiagramCanvas - canvas with class diagram
 	 */
     public ExportAction(Shell shell, ClassDiagramCanvas classDiagramCanvas) {
         setText("Export");

@@ -15,9 +15,6 @@ import cz.muni.fi.diagram.model.ClassModel;
 public class ClassDiagram {
 	/** Classes in class diagram */
     private List<ClassModel> classes;
-
-	private int scaleWidth = -1;
-	private int scaleHeight = -1;
 	/** Decides if the fields of the diagram should be hidden */
     private boolean hideFields = false;
     /** Decides if the methods of the diagram should be hidden */
@@ -103,22 +100,6 @@ public class ClassDiagram {
      */
     public boolean isEmpty() {
 		return getClasses().isEmpty();
-	}
-
-    public int getScaleWidth() {
-		return scaleWidth;
-	}
-
-	public void setScaleWidth(int scale) {
-		this.scaleWidth = scale;
-	}
-
-	public int getScaleHeight() {
-		return scaleHeight;
-	}
-
-	public void setScaleHeight(int scale) {
-		this.scaleHeight = scale;
 	}
 
 	public boolean isHideFields() {

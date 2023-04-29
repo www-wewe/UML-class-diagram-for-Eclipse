@@ -22,7 +22,7 @@ public class ClassModelParser {
 
 	/**
 	 * Parses CompilationUnit and using ClassVisitor creates ClassModel.
-	 * @param compilationUnit
+	 * @param compilationUnit from which is created ClassModel
 	 * @return ClassModel
 	 */
 	public static ClassModel createClassModel(ICompilationUnit compilationUnit) {
@@ -41,8 +41,8 @@ public class ClassModelParser {
 
 	/**
 	 * Reads a ICompilationUnit and creates the AST DOM for manipulating the Java source file
-	 * @param unit
-	 * @return CompilationUnit
+	 * @param unit to be parsed
+	 * @return CompilationUnit with created AST
 	 */
 	private static CompilationUnit parse(ICompilationUnit unit) {
 		ASTParser parser = ASTParser.newParser(AST.getJLSLatest());

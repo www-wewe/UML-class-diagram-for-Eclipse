@@ -39,7 +39,7 @@ public class ClassModel {
 
     /**
 	 * Creates Class Model from CompilationUnit
-	 * @param unit
+	 * @param unit from which is created Class Model
 	 * @return Class Model
 	 */
 	public static ClassModel create(ICompilationUnit unit) {
