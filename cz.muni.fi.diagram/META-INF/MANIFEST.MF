@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: ClassDiagram
+Bundle-Name: Class Diagram
 Bundle-SymbolicName: cz.muni.fi.diagram;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Require-Bundle: org.eclipse.fx.ui.workbench3,

@@ -19,6 +19,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 
@@ -101,19 +102,17 @@ public class ManageDiagramDialog extends Dialog {
 	 * @param dialog - parent composite
 	 */
 	private void addListViewer(Composite dialog) {
-//		ScrolledComposite scrolledComposite = new ScrolledComposite(dialog, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
-//		
-//		Composite listComposite = new Composite(scrolledComposite, SWT.NONE);
-//		listComposite.setLayout(new GridLayout(1, false));
+        Composite listComposite = new Composite(dialog, SWT.NONE);
+        listComposite.setLayout(new GridLayout(1, false));
+        listComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-        listViewer = new ListViewer(dialog, SWT.BORDER | SWT.V_SCROLL);
-        listViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+        listViewer = new ListViewer(listComposite, SWT.SINGLE | SWT.V_SCROLL | SWT.BORDER);
         listViewer.setContentProvider(ArrayContentProvider.getInstance());
         listViewer.setInput(classModels);
+        GridData listLayoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
+        listLayoutData.heightHint = listViewer.getList().getItemHeight() * 5;
+        listViewer.getControl().setLayoutData(listLayoutData);
 
-//        scrolledComposite.setContent(listComposite);
-//        scrolledComposite.setSize(150, 150);
-//        scrolledComposite.setMinSize(150, 150);
         addListViewerListener();
 	}
 
@@ -359,6 +358,11 @@ public class ManageDiagramDialog extends Dialog {
         newShell.setText("Manage Classes Dialog");
     }
 
+	@Override
+    protected Point getInitialSize() {
+        return new Point(250, 400);
+    }
+
     @Override
     protected void cancelPressed() {
     	disposeImages();
@@ -370,5 +374,4 @@ public class ManageDiagramDialog extends Dialog {
     	disposeImages();
     	return super.close();
     }
-
 }

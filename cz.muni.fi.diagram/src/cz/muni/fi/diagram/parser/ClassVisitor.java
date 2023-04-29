@@ -15,6 +15,7 @@ import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.AnonymousClassDeclaration;
+import org.eclipse.jdt.core.dom.BodyDeclaration;
 
 import cz.muni.fi.diagram.model.ClassModel;
 import cz.muni.fi.diagram.model.ClassType;
@@ -103,9 +104,7 @@ public class ClassVisitor extends ASTVisitor {
 	
     @Override
     public boolean visit(FieldDeclaration node) {
-    	ClassModel classModel = getCurrentClassModel(((AbstractTypeDeclaration)node.getParent())
-    			.getName().getIdentifier());
-    	assert(classModel != null);
+    	ClassModel classModel = getCurrentClassModel(node);
         // Create a new FieldModel object to represent the field
         FieldModel fieldModel = new FieldModel();
         fieldModel.setName(node.fragments().get(0).toString());
@@ -131,10 +130,8 @@ public class ClassVisitor extends ASTVisitor {
     }
 
     @Override
-    public boolean visit(MethodDeclaration node) { //node.parent
-    	ClassModel classModel = getCurrentClassModel(((AbstractTypeDeclaration)node.getParent())
-    			.getName().getIdentifier());
-    	assert(classModel != null);
+    public boolean visit(MethodDeclaration node) {
+    	ClassModel classModel = getCurrentClassModel(node);
         // Create a new MethodModel object to represent the method
         MethodModel methodModel = new MethodModel();
         methodModel.setName(node.getName().getIdentifier());
@@ -191,9 +188,7 @@ public class ClassVisitor extends ASTVisitor {
 
 	@Override
 	public boolean visit(EnumConstantDeclaration node) {
-		ClassModel classModel = getCurrentClassModel(((AbstractTypeDeclaration)node.getParent())
-    			.getName().getIdentifier());
-		assert(classModel != null);
+		ClassModel classModel = getCurrentClassModel(node);
 		FieldModel fieldModel = new FieldModel();
 		fieldModel.setName(node.getName().getFullyQualifiedName());
 
@@ -227,13 +222,14 @@ public class ClassVisitor extends ASTVisitor {
 	 * @param className of model
 	 * @return class model with {@code className}
 	 */
-	private ClassModel getCurrentClassModel(String className) {
+	private ClassModel getCurrentClassModel(BodyDeclaration node) {
+		String className = ((AbstractTypeDeclaration)node.getParent())
+				.getName().getIdentifier();
 		for (ClassModel classModel : classModels) {
 		    if (classModel.getName().equals(className)) {
 		        return classModel;
 		    }
 		}
-		assert(false); // unreachable
-        return null;
+		throw new IllegalArgumentException("The node belongs to a different AST");
     }
 }

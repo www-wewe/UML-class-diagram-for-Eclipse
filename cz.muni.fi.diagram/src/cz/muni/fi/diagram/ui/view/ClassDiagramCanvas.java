@@ -8,7 +8,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import cz.muni.fi.diagram.model.ClassModel;
@@ -47,41 +46,26 @@ public class ClassDiagramCanvas extends Canvas {
 	}
 
     /**
-     * @param classDiagram to display on canvas
-     */
-    public void setClassDiagram(ClassDiagram classDiagram) {
-        this.classDiagram = classDiagram;
-        generateImage();
-        redraw();
-    }
-
-    /**
-     * @return classDiagram
-     */
-    public ClassDiagram getClassDiagram() {
-    	return this.classDiagram;
-    }
-
-    /**
      * Generates image and draws it to canvas.
      * 
      * @param gc class which draws image
      */
     public void draw(GC gc) {
-    	if (!classDiagram.isEmpty()) {
-    		Rectangle canvasBounds = getBounds();
-    		int imgX = (canvasBounds.width - image.getBounds().width) / 2;
-    		int imgY = (canvasBounds.height - image.getBounds().height) / 2;
-    		gc.drawImage(image, imgX, imgY);
-    		setSize(image.getBounds().width, image.getBounds().height);
-    		getParent().setSize(image.getBounds().width, image.getBounds().height);
-    		((ScrolledComposite) getParent().getParent()).setMinSize(image.getBounds().width, image.getBounds().height);
+    	if (!classDiagram.isEmpty() && image != null && !image.isDisposed()) {
+    		int width = (image.getBounds().width > ClassDiagramView.MIN_WIDTH) ? image.getBounds().width : ClassDiagramView.MIN_WIDTH;
+    		int height = (image.getBounds().height > ClassDiagramView.MIN_HEIGHT) ? image.getBounds().height : ClassDiagramView.MIN_HEIGHT;
+
+    		setSize(width, height);
+    		getParent().setSize(width, height);
+    		((ScrolledComposite) getParent().getParent()).setMinSize(width, height);
+
+    		gc.drawImage(image, 0, 0);
     		setEnabledActions(true);
         }
     	else {
     		gc.drawText(text, 5, 5, true);
-    		setSize(400, 650);
-            getParent().setSize(400, 650);
+    		setSize(ClassDiagramView.MIN_WIDTH, ClassDiagramView.MIN_HEIGHT);
+            getParent().setSize(ClassDiagramView.MIN_WIDTH, ClassDiagramView.MIN_HEIGHT);
             setEnabledActions(false);
     	}
     }
@@ -130,6 +114,9 @@ public class ClassDiagramCanvas extends Canvas {
 		redraw();
 	}
 
+	/**
+	 * Zoom image in.
+	 */
 	public void zoomIn() {
 		scale += 0.1;
 		imageGenerator.setScale(scale);
@@ -137,15 +124,14 @@ public class ClassDiagramCanvas extends Canvas {
 		redraw();
 	}
 
+	/**
+	 * Zoom image out.
+	 */
 	public void zoomOut() {
 		scale -= 0.1;
 		imageGenerator.setScale(scale);
 		generateImage();
 		redraw();
-	}
-
-	public void addToolbarActions(List<IAction> toolbarActions) {
-		this.toolbarActions = toolbarActions;
 	}
 
 	/**
@@ -158,4 +144,27 @@ public class ClassDiagramCanvas extends Canvas {
 		}
 	}
 
+    /**
+     * @param classDiagram to display on canvas
+     */
+    public void setClassDiagram(ClassDiagram classDiagram) {
+        this.classDiagram = classDiagram;
+        generateImage();
+        redraw();
+    }
+
+    /**
+     * @return classDiagram
+     */
+    public ClassDiagram getClassDiagram() {
+    	return this.classDiagram;
+    }
+
+	/**
+	 * Adds toolbar actions.
+	 * @param toolbarActions
+	 */
+	public void addToolbarActions(List<IAction> toolbarActions) {
+		this.toolbarActions = toolbarActions;
+	}
 }

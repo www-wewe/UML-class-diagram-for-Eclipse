@@ -46,7 +46,7 @@ public class MethodModel implements IPlantUMLString {
     public String getParametersToPlantUMLString() {
     	return parameters.stream()
     		      .map(ParameterModel::toString)
-    		      .collect(Collectors.joining(", ", "", ""));
+    		      .collect(Collectors.joining(", "));
     }
 
     public boolean isStatic() {

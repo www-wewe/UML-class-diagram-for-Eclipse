@@ -5,6 +5,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 
@@ -26,12 +27,12 @@ public final class PlantUMLImageGenerator implements IClassDiagramImageGenerator
 
 	/** Class diagram **/
 	private ClassDiagram classDiagram;
-	/** Constant indicating start of PlantUML code */
-	private static final String START_PLANT_UML = "@startuml\n";
-	/** Constant indicating end of PlantUML code */
-	private static final String END_PLANT_UML = "@enduml\n";
 	/** Newline character */
 	private static final String NEWLINE = "\n";
+	/** Constant indicating start of PlantUML code */
+	private static final String START_PLANT_UML = "@startuml" + NEWLINE;
+	/** Constant indicating end of PlantUML code */
+	private static final String END_PLANT_UML = "@enduml" + NEWLINE;
 	/** Zoom scale */
 	private double scale = 1.0;
 	/** PlantUML source code from which is generated image */
@@ -61,7 +62,15 @@ public final class PlantUMLImageGenerator implements IClassDiagramImageGenerator
 	 * @return generated Image
 	 */
 	public Image generateImage(ClassDiagram classDiagram) {
-		diagramPlantUMLSource = getPlantUMLSource(classDiagram);
+		String newDiagramSource = null;
+		try {
+			newDiagramSource = getPlantUMLSource(classDiagram);
+		} catch (OutOfMemoryError e) {
+			MessageDialog.openError(Display.getDefault().getActiveShell(), "Error", "This amount of data cannot be processed. Try adding fewer classes.");
+			classDiagram.clear();
+			return null;
+		}
+		diagramPlantUMLSource = newDiagramSource;
 	    return generateImageFromSourceString(diagramPlantUMLSource);		
 	}
 

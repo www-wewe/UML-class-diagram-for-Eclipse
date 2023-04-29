@@ -35,11 +35,15 @@ import cz.muni.fi.diagram.ui.toolbar.ZoomOutDiagramAction;
  */
 public class ClassDiagramView extends ViewPart {
 
+	/** Minimal width of view area */
+	public static final int MIN_WIDTH = 400;
+	/** Minimal height of view area */
+	public static final int MIN_HEIGHT = 650;
 	/** Class diagram **/
 	private ClassDiagram classDiagram = new ClassDiagram();
 	/** Canvas with class diagram **/
 	private ClassDiagramCanvas classDiagramCanvas;
-
+	/** Toolbar actions whose visibility is changing according to content of class diagram canvas */
 	private List<IAction> toolbarActions = new ArrayList<>();
 
     @Override
@@ -55,10 +59,10 @@ public class ClassDiagramView extends ViewPart {
         classDiagramCanvas.setLayoutData(canvasGridData);
         canvasGridData.exclude = true;
 
-        scrolledComposite.setMinSize(400, 650);
-        scrolledComposite.setSize(400, 650);
-        mainComposite.setSize(400, 650);
-        classDiagramCanvas.setSize(400, 650);
+        scrolledComposite.setMinSize(MIN_WIDTH, MIN_HEIGHT);
+        scrolledComposite.setSize(MIN_WIDTH, MIN_HEIGHT);
+        mainComposite.setSize(MIN_WIDTH, MIN_HEIGHT);
+        classDiagramCanvas.setSize(MIN_WIDTH, MIN_HEIGHT);
 
         DropTarget dropTarget = new DropTarget(classDiagramCanvas, DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_DEFAULT);
         dropTarget.setTransfer(LocalSelectionTransfer.getTransfer()); 
@@ -75,17 +79,19 @@ public class ClassDiagramView extends ViewPart {
 		ZoomInDiagramAction zoomIn = new ZoomInDiagramAction(classDiagramCanvas);
 		ZoomOutDiagramAction zoomOut = new ZoomOutDiagramAction(classDiagramCanvas);
 		ExportAction export = new ExportAction(parent.getShell(), classDiagramCanvas);
+		ManageDiagramAction manageDiagram = new ManageDiagramAction(parent.getShell(), classDiagramCanvas);
+		LegendAction legend = new LegendAction(parent.getShell());
+
+		IContributionManager toolBarManager = getViewSite().getActionBars().getToolBarManager();
+		toolBarManager.add(zoomIn);
+		toolBarManager.add(zoomOut);
+		toolBarManager.add(export);
+		toolBarManager.add(manageDiagram);
+		toolBarManager.add(legend);
+
 		toolbarActions.add(zoomIn);
 		toolbarActions.add(zoomOut);
 		toolbarActions.add(export);
-
-        IContributionManager toolBarManager = getViewSite().getActionBars().getToolBarManager();
-        toolBarManager.add(zoomIn);
-        toolBarManager.add(zoomOut);
-    	toolBarManager.add(export);
-    	toolBarManager.add(new ManageDiagramAction(parent.getShell(), classDiagramCanvas));
-    	toolBarManager.add(new LegendAction(parent.getShell()));
-
     	classDiagramCanvas.addToolbarActions(toolbarActions);
 	}
 
@@ -93,5 +99,4 @@ public class ClassDiagramView extends ViewPart {
 	public void setFocus() {
 		classDiagramCanvas.setFocus();
 	}
-
 }

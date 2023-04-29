@@ -12,7 +12,7 @@ public enum Visibility {
 
 	public final String character;
 
-	Visibility(String character) {
+	private Visibility(String character) {
 		this.character = character;
 	}
 }
