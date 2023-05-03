@@ -1,7 +1,7 @@
 /** Copyright (c) 2023, Veronika Lenková */
 package cz.muni.fi.diagram.model;
 
-import cz.muni.fi.diagram.parser.IPlantUMLString;
+import cz.muni.fi.diagram.parser.IPlantUML;
 
 /**
  * Field in class model.
@@ -9,7 +9,7 @@ import cz.muni.fi.diagram.parser.IPlantUMLString;
  * @author Veronika Lenková
  */
 
-public class FieldModel implements IPlantUMLString {
+public class FieldModel implements IPlantUML {
 	/** Name of the field */
     private String name;
     /** Type of the field */
@@ -72,7 +72,7 @@ public class FieldModel implements IPlantUMLString {
 	}
 
 	@Override
-	public String toPlantUMLString() {
+	public String getPlantUMLString() {
 		int indexOfDelimeter = getName().indexOf('=');
 		String fieldName = indexOfDelimeter == -1 ? getName() : getName().substring(0, indexOfDelimeter);
 		return  getVisibility().character + (isStatic() ? "{static} " : "") + (isFinal() ? "final " : "") + 

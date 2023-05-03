@@ -6,10 +6,10 @@ package cz.muni.fi.diagram.parser;
  * 
  * @author Veronika Lenková
  */
-public interface IPlantUMLString {
+public interface IPlantUML {
 
 	/**
 	 * @return text in PlantUML language
 	 */
-	public String toPlantUMLString();
+	public String getPlantUMLString();
 }

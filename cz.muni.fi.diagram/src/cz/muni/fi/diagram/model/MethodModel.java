@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import cz.muni.fi.diagram.parser.IPlantUMLString;
+import cz.muni.fi.diagram.parser.IPlantUML;
 
 /**
  * Method in class model.
@@ -13,7 +13,7 @@ import cz.muni.fi.diagram.parser.IPlantUMLString;
  * @author Veronika Lenková
  */
 
-public class MethodModel implements IPlantUMLString {
+public class MethodModel implements IPlantUML {
 
 	/** Name of the method */
     private String name;
@@ -96,7 +96,7 @@ public class MethodModel implements IPlantUMLString {
 	}
 
 	@Override
-	public String toPlantUMLString() {
+	public String getPlantUMLString() {
 		return getVisibility().character + (isStatic() ? "{static} " : "") + (isAbstract() ? "{abstract} " : "") + 
 				getName() + "(" + getParametersToPlantUMLString() + ")" + (getReturnType() == null ? "" : " : " + getReturnType());
 	}

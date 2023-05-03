@@ -354,7 +354,7 @@ public class ManageDiagramDialog extends Dialog {
 	@Override
     protected void configureShell(Shell newShell) {
         super.configureShell(newShell);
-        newShell.setText("Manage Classes Dialog");
+        newShell.setText("Manage class diagram");
     }
 
 	@Override

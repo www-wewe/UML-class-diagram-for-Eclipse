@@ -137,12 +137,12 @@ public final class PlantUMLImageGenerator implements IClassDiagramImageGenerator
 		oneClass.append(classModel.getName()).append(" {" + NEWLINE);
 		if (!classDiagram.isHideFields()) {
 			for (FieldModel fieldModel : classModel.getFields() ) {
-				oneClass.append("{field}").append(fieldModel.toPlantUMLString()).append(NEWLINE);
+				oneClass.append("{field}").append(fieldModel.getPlantUMLString()).append(NEWLINE);
 			}
 		}
 		if (!classDiagram.isHideMethods()) {
 			for (MethodModel methodModel : classModel.getMethods() ) {
-				oneClass.append("{method}").append(methodModel.toPlantUMLString()).append(NEWLINE);
+				oneClass.append("{method}").append(methodModel.getPlantUMLString()).append(NEWLINE);
 			}
 		}
 		addRelationships(source, relationshipsString, classModel);

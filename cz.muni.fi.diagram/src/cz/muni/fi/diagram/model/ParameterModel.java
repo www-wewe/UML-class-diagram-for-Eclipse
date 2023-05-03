@@ -1,7 +1,7 @@
 /** Copyright (c) 2023, Veronika Lenková */
 package cz.muni.fi.diagram.model;
 
-import cz.muni.fi.diagram.parser.IPlantUMLString;
+import cz.muni.fi.diagram.parser.IPlantUML;
 
 /**
  * One parameter in method model.
@@ -9,7 +9,7 @@ import cz.muni.fi.diagram.parser.IPlantUMLString;
  * @author Veronika Lenková
  */
 
-public class ParameterModel implements IPlantUMLString {
+public class ParameterModel implements IPlantUML {
 	/** Name of the parameter */
     private String name;
     /** Type of the parameter */
@@ -41,7 +41,7 @@ public class ParameterModel implements IPlantUMLString {
 	}
 
 	@Override
-	public String toPlantUMLString() {
+	public String getPlantUMLString() {
 		return getType() + " " + getName();
 	}
 	
