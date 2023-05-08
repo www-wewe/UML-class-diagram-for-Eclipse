@@ -62,6 +62,7 @@ public final class PlantUMLImageGenerator implements IClassDiagramImageGenerator
 	 * @return generated Image
 	 */
 	public Image generateImage(ClassDiagram classDiagram) {
+		setClassDiagram(classDiagram);
 		String newDiagramSource = null;
 		try {
 			newDiagramSource = getPlantUMLSource(classDiagram);
@@ -82,7 +83,7 @@ public final class PlantUMLImageGenerator implements IClassDiagramImageGenerator
 	 * @return generated Image
 	 */
 	@SuppressWarnings("deprecation")
-	private Image generateImageFromSourceString(String plantUMLSource) {
+	public Image generateImageFromSourceString(String plantUMLSource) {
 		diagramPlantUMLSource = plantUMLSource;
 		SourceStringReader reader = new SourceStringReader(plantUMLSource);
 	    ByteArrayOutputStream out = new ByteArrayOutputStream();
