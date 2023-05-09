@@ -25,7 +25,7 @@ public class ClassDiagramTest {
 	private PlantUMLImageGenerator imageGenerator = new PlantUMLImageGenerator();
 
 	/**
-	 * Test for generating Image from empty ClassDiagram.
+	 * Test for generating Image from ClassDiagram with empty class.
 	 */
 	@Test
 	void testGenerateImageFromClassDiagramWithEmptyClass() {
