@@ -4,7 +4,7 @@ This plugin uses [PlantUML](https://plantuml.com/): free diagram generator, to g
 # Installation
 Use the Eclipse update manager via *Help -> Install New Software...* to install this new feature into your Eclipse IDE.
 
-Use the update manager to point to your local directory with **plugin.zip**. Then select and install the Class Diagram feature.
+Add new repository by clicking *Add... -> Archive...* and point to **plugin.zip**. Then select and install the Class Diagram feature.
 
 # License
 This plugin uses [BSD 3-Clause License](https://opensource.org/license/bsd-3-clause/).
