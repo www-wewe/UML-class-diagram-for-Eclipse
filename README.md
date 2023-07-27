@@ -7,7 +7,7 @@ You need these things to use PlantUML:
 
 # Installation
 Use the Eclipse update manager via *Help -> Install New Software...* to install this new feature into your Eclipse IDE.
-Add new repository by clicking *Add... -> Archive...* and point to **plugin.zip**. Then select and install the Class Diagram feature.
+Add new repository by clicking *Add... -> Archive...* and point to **plugin.zip**. Then select and install the *Class Diagram* feature. (If you don't see *Class Diagram*, uncheck *Group items by category* checkbox.)
 
 The plugin is available via *Window -> Show View -> Class Diagram*.
 
