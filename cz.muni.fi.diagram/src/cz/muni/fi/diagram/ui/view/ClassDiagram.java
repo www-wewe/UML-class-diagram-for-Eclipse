@@ -31,6 +31,10 @@ public class ClassDiagram {
     private boolean hideNestedClasses = false;
     /** Decides if the package name should be hidden */
     private boolean hidePackage = true;
+    /** Decides if the private fields and methods of the diagram should be hidden */
+    private boolean hidePrivate = false;
+    /** Decides if the public fields and methods of the diagram should be hidden */
+    private boolean hidePublic = false;
 
 	/**
      * Constructor
@@ -166,5 +170,19 @@ public class ClassDiagram {
 		this.hidePackage = hidePackage;
 	}
 
-}
+	public boolean isHidePrivate() {
+		return hidePrivate;
+	}
 
+	public void setHidePrivate(boolean hidePrivate) {
+		this.hidePrivate = hidePrivate;
+	}
+
+	public boolean isHidePublic() {
+		return hidePublic;
+	}
+
+	public void setHidePublic(boolean hidePublic) {
+		this.hidePublic = hidePublic;
+	}
+}

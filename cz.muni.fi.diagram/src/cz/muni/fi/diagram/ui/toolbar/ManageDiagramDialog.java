@@ -58,6 +58,10 @@ public class ManageDiagramDialog extends Dialog {
     private Button checkboxHidePackage;
     /** Button for hide packages */
     private Button checkboxHideNestedClasses;
+    /** Button for hide private */
+    private Button checkboxHidePrivate;
+    /** Button for hide public */
+    private Button checkboxHidePublic;
 
 	/** Button for removing all classes */
 	private Button removeAllButton;
@@ -321,6 +325,14 @@ public class ManageDiagramDialog extends Dialog {
         checkboxHideNestedClasses= new Button(dialog, SWT.CHECK);
         checkboxHideNestedClasses.setText("Hide nested classes");
         checkboxHideNestedClasses.setSelection(classDiagram.isHideNestedClasses());
+
+        checkboxHidePrivate = new Button(dialog, SWT.CHECK);
+        checkboxHidePrivate.setText("Hide private");
+        checkboxHidePrivate.setSelection(classDiagram.isHidePrivate());
+
+        checkboxHidePublic = new Button(dialog, SWT.CHECK);
+        checkboxHidePublic.setText("Hide public");
+        checkboxHidePublic.setSelection(classDiagram.isHidePublic());
 	}
 
     @Override
@@ -334,6 +346,8 @@ public class ManageDiagramDialog extends Dialog {
     	classDiagram.setHideChildren(checkboxHideChildren.getSelection());
     	classDiagram.setHidePackage(checkboxHidePackage.getSelection());
     	classDiagram.setHideNestedClasses(checkboxHideNestedClasses.getSelection());
+    	classDiagram.setHidePrivate(checkboxHidePrivate.getSelection());
+    	classDiagram.setHidePublic(checkboxHidePublic.getSelection());
 
     	classDiagramCanvas.setClassDiagram(classDiagram);
     	classDiagramCanvas.redraw();

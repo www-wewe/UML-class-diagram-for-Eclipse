@@ -13,6 +13,7 @@ import cz.muni.fi.diagram.model.ClassModel;
 import cz.muni.fi.diagram.model.ClassType;
 import cz.muni.fi.diagram.model.FieldModel;
 import cz.muni.fi.diagram.model.MethodModel;
+import cz.muni.fi.diagram.model.Visibility;
 import cz.muni.fi.diagram.ui.view.ClassDiagram;
 import net.sourceforge.plantuml.FileFormat;
 import net.sourceforge.plantuml.FileFormatOption;
@@ -111,6 +112,7 @@ public final class PlantUMLImageGenerator implements IClassDiagramImageGenerator
 		}
 		source.append(relationshipsString);
 		source.append(END_PLANT_UML);
+		System.out.println(source.toString());
 		return source.toString();
 	}
 
@@ -122,33 +124,60 @@ public final class PlantUMLImageGenerator implements IClassDiagramImageGenerator
 	 * @param classModel to be added to PlantUML source
 	 */
 	private void addClassToPlantUML(StringBuilder source, StringBuilder relationshipsString, ClassModel classModel) {
+		if (!shouldAddClass(classModel.getType())) return;
+
 		boolean showPackage = !classDiagram.isHidePackage();
-		if (classDiagram.isHideInterface() && classModel.getType() == ClassType.INTERFACE) {
-			return;
-		}
-		if (classDiagram.isHideEnum() && classModel.getType() == ClassType.ENUM) {
-			return;
-		}
 		if (showPackage) {
-			source.append("package " + classModel.getPackageName() + " {" + NEWLINE);
+			source.append("package ").append(classModel.getPackageName()).append(" {").append(NEWLINE);
 		}
 
 		StringBuilder oneClass =  new StringBuilder();
 		oneClass.append(classModel.getType().character).append(" ");
-		oneClass.append(classModel.getName()).append(" {" + NEWLINE);
+		oneClass.append(classModel.getName()).append(" {").append(NEWLINE);
+
 		if (!classDiagram.isHideFields()) {
 			for (FieldModel fieldModel : classModel.getFields() ) {
-				oneClass.append("{field}").append(fieldModel.getPlantUMLString()).append(NEWLINE);
+				if (shouldAddElement(fieldModel.getVisibility())) {
+					oneClass.append("{field}").append(fieldModel.getPlantUMLString()).append(NEWLINE);
+				}
 			}
 		}
+
 		if (!classDiagram.isHideMethods()) {
 			for (MethodModel methodModel : classModel.getMethods() ) {
-				oneClass.append("{method}").append(methodModel.getPlantUMLString()).append(NEWLINE);
+				if (shouldAddElement(methodModel.getVisibility())) {
+					oneClass.append("{method}").append(methodModel.getPlantUMLString()).append(NEWLINE);
+				}
 			}
 		}
+
 		addRelationships(source, relationshipsString, classModel);
-		oneClass.append("}" + NEWLINE);
-		source.append(showPackage ? oneClass + "}" + NEWLINE : source.append(oneClass));
+		oneClass.append("}").append(NEWLINE);
+		if (showPackage) {
+			source.append(oneClass).append("}").append(NEWLINE);
+		} else {
+			source.append(oneClass);
+		}
+	}
+
+	/**
+	 * @param type of class
+	 * @return true if class can be added, false otherwise
+	 */
+	private boolean shouldAddClass(ClassType type) {
+	    switch (type) {
+	        case INTERFACE: return !classDiagram.isHideInterface();
+	        case ENUM: return !classDiagram.isHideEnum();
+	        default: return true;
+	    }
+	}
+
+	/**
+	 * @param visibility of element (method or field)
+	 * @return true if element can be added, false otherwise
+	 */
+	private boolean shouldAddElement(Visibility visibility) {
+	    return !(classDiagram.isHidePrivate() && visibility == Visibility.PRIVATE) && !(classDiagram.isHidePublic() && visibility == Visibility.PUBLIC);
 	}
 
 	/**
