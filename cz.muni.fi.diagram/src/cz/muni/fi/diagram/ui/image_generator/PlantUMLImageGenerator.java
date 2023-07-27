@@ -112,7 +112,6 @@ public final class PlantUMLImageGenerator implements IClassDiagramImageGenerator
 		}
 		source.append(relationshipsString);
 		source.append(END_PLANT_UML);
-		System.out.println(source.toString());
 		return source.toString();
 	}
 
